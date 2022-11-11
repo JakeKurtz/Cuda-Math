@@ -2,8 +2,10 @@
 
 int main()
 {
-	jek::Vec2f x = jek::Vec2f();
-	jek::Vec2i y = jek::Vec2i();
+	jek::Vec4i x = jek::Vec4i();
+	jek::Vec4f y = jek::Vec4f();
+
+	auto z = x * y;
 
 	return 0;
 }

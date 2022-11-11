@@ -14,7 +14,7 @@ namespace jek
 
 	template <class T> struct _ALIGN(16) Vec4
 	{
-		static_assert(sizeof(T) == 4, "T is not 4 bytes");
+		//static_assert(sizeof(T) == 4, "T is not 4 bytes");
 		T x{}, y{}, z{}, w{};
 		_HOST_DEVICE Vec4() {};
 		_HOST_DEVICE Vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {};
@@ -277,96 +277,105 @@ namespace jek
 	/* -------------------------------------------------------------------------- */
 
 	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const Vec4<T>& v1, const Vec4<U>& v2)
-		-> Vec4<decltype(v1.x + v2.x)>
+		inline auto operator*=(const Vec4<T>& v1, const Vec4<U>& v2)
+		-> Vec4<decltype(v1.x * v2.x)>
 	{
 		return { v1.x * v2.x, v1.y * v2.y, v1.z * v2.z, v1.w * v2.w };
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator*=(const Vec4<T>& v, const U s)
+		-> Vec4<decltype(v.x * s)>
+	{
+		return { s * v.x, s * v.y, s * v.z, s * v.w };
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator*(const Vec4<T>& v1, const Vec4<U>& v2)
+		-> Vec4<decltype(v1.x * v2.x)>
+	{
+		auto temp(v1);
+		return temp *= v2;
 	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator*(const T s, const Vec4<U>& v) 
-		-> Vec4<decltype(s + v.x)>
+		-> Vec4<decltype(s * v.x)>
 	{
-		return { s * v.x, s * v.y, s * v.z, s * v.w };
+		auto temp(v);
+		return temp *= s;
 	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator*(const Vec4<T>& v, const U s) 
-		-> Vec4<decltype(v.x + s)>
+		-> Vec4<decltype(v.x * s)>
 	{
-		return { s * v.x, s * v.y, s * v.z, s * v.w };
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*=(const Vec4<T>& v1, const Vec4<U>& v2) 
-		-> Vec4<decltype(v1.x + v2.x)>
-	{
-		return { v1.x * v2.x, v1.y * v2.y, v1.z * v2.z, v1.w * v2.w };
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*=(const Vec4<T>& v, const U s) 
-		-> Vec4<decltype(v.x + s)>
-	{
-		return { s * v.x, s * v.y, s * v.z, s * v.w };
+		auto temp(v);
+		return temp *= s;
 	};
 
 	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const Vec3<T>& v1, const Vec3<U>& v2)
-		-> Vec3<decltype(v1.x + v2.x)>
-	{
-		return {v1.x * v2.x, v1.y * v2.y, v1.z * v2.z};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const T s, const Vec3<U>& v)
-		-> Vec3<decltype(s + v.x)>
-	{
-		return {s * v.x, s * v.y, s * v.z};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const Vec3<T>& v, const U s)
-		-> Vec3<decltype(v.x + s)>
-	{
-		return {s * v.x, s * v.y, s * v.z};
-	};
-	template <class T, class U> _HOST_DEVICE
 		inline auto operator*=(const Vec3<T>& v1, const Vec3<U>& v2)
-		-> Vec3<decltype(v1.x + v2.x)>
+		-> Vec3<decltype(v1.x * v2.x)>
 	{
-		return {v1.x * v2.x, v1.y * v2.y, v1.z * v2.z};
+		return { v1.x * v2.x, v1.y * v2.y, v1.z * v2.z };
 	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator*=(const Vec3<T>& v, const U s)
-		-> Vec3<decltype(v.x + s)>
+		-> Vec3<decltype(v.x * s)>
 	{
-		return {s * v.x, s * v.y, s * v.z};
+		return { s * v.x, s * v.y, s * v.z };
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator*(const Vec3<T>& v1, const Vec3<U>& v2)
+		-> Vec3<decltype(v1.x * v2.x)>
+	{
+		auto temp(v1);
+		return temp *= v2;
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator*(const T s, const Vec3<U>& v)
+		-> Vec3<decltype(s * v.x)>
+	{
+		auto temp(v);
+		return temp *= s;
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator*(const Vec3<T>& v, const U s)
+		-> Vec3<decltype(v.x * s)>
+	{
+		auto temp(v);
+		return temp *= s;
 	};
 
 	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const Vec2<T>& v1, const Vec2<U>& v2)
-		-> Vec2<decltype(v1.x + v2.x)>
-	{
-		return {v1.x * v2.x, v1.y * v2.y};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const T s, const Vec2<U>& v)
-		-> Vec2<decltype(s + v.x)>
-	{
-		return {s * v.x, s * v.y};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const Vec2<T>& v, const U s)
-		-> Vec2<decltype(v.x + s)>
-	{
-		return {s * v.x, s * v.y};
-	};
-	template <class T, class U> _HOST_DEVICE
 		inline auto operator*=(const Vec2<T>& v1, const Vec2<U>& v2)
-		-> Vec2<decltype(v1.x + v2.x)>
+		-> Vec2<decltype(v1.x * v2.x)>
 	{
-		return {v1.x * v2.x, v1.y * v2.y};
+		return { v1.x * v2.x, v1.y * v2.y };
 	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator*=(const Vec2<T>& v, const U s)
-		-> Vec2<decltype(v.x + s)>
+		-> Vec2<decltype(v.x * s)>
 	{
-		return {s * v.x, s * v.y};
+		return { s * v.x, s * v.y };
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator*(const Vec2<T>& v1, const Vec2<U>& v2)
+		-> Vec2<decltype(v1.x * v2.x)>
+	{
+		auto temp(v1);
+		return temp *= v2;
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator*(const T s, const Vec2<U>& v)
+		-> Vec2<decltype(s * v.x)>
+	{
+		auto temp(v);
+		return temp *= s;
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator*(const Vec2<T>& v, const U s)
+		-> Vec2<decltype(v.x * s)>
+	{
+		auto temp(v);
+		return temp *= s;
 	};
 
 	/* -------------------------------------------------------------------------- */
@@ -374,96 +383,105 @@ namespace jek
 	/* -------------------------------------------------------------------------- */
 
 	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const Vec4<T>& v1, const Vec4<U>& v2) 
-		-> Vec4<decltype(v1.x + v2.x)>
+		inline auto operator/=(const Vec4<T>& v1, const Vec4<U>& v2)
+		-> Vec4<decltype(v1.x / v2.x)>
 	{
-		return {v1.x / v2.x, v1.y / v2.y, v1.z / v2.z, v1.w / v2.w};
+		return { v1.x / v2.x, v1.y / v2.y, v1.z / v2.z, v1.w / v2.w };
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator/=(const Vec4<T>& v, const U s)
+		-> Vec4<decltype(v.x / s)>
+	{
+		return { v.x / s, v.y / s, v.z / s, v.w / s };
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator/(const Vec4<T>& v1, const Vec4<U>& v2) 
+		-> Vec4<decltype(v1.x / v2.x)>
+	{
+		auto temp(v1);
+		return temp /= v2;
 	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator/(const T s, const Vec4<U>& v) 
-		-> Vec4<decltype(s + v.x)>
+		-> Vec4<decltype(s / v.x)>
 	{
-		return {s / v.x, s / v.y, s / v.z, s / v.w};
+		Vec4<decltype(s / v.x)>temp(s);
+		return temp /= v;
 	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator/(const Vec4<T>& v, const U s) 
-		-> Vec4<decltype(v.x + s)>
+		-> Vec4<decltype(v.x / s)>
 	{
-		return {v.x / s, v.y / s, v.z / s, v.w / s};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/=(const Vec4<T>& v1, const Vec4<U>& v2) 
-		-> Vec4<decltype(v1.x + v2.x)>
-	{
-		return {v1.x / v2.x, v1.y / v2.y, v1.z / v2.z, v1.w / v2.w};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/=(const Vec4<T>& v, const U s) 
-		-> Vec4<decltype(v.x + s)>
-	{
-		return {v.x / s, v.y / s, v.z / s, v.w / s};
+		auto temp(v);
+		return temp /= s;
 	};
 
 	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const Vec3<T>& v1, const Vec3<U>& v2)
-		-> Vec3<decltype(v1.x + v2.x)>
-	{
-		return {v1.x / v2.x, v1.y / v2.y, v1.z / v2.z};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const T s, const Vec3<U>& v)
-		-> Vec3<decltype(s + v.x)>
-	{
-		return {s / v.x, s / v.y, s / v.z};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const Vec3<T>& v, const U s)
-		-> Vec3<decltype(v.x + s)>
-	{
-		return {v.x / s, v.y / s, v.z / s};
-	};
-	template <class T, class U> _HOST_DEVICE
 		inline auto operator/=(const Vec3<T>& v1, const Vec3<U>& v2)
-		-> Vec3<decltype(v1.x + v2.x)>
+		-> Vec3<decltype(v1.x / v2.x)>
 	{
-		return {v1.x / v2.x, v1.y / v2.y, v1.z / v2.z};
+		return { v1.x / v2.x, v1.y / v2.y, v1.z / v2.z };
 	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator/=(const Vec3<T>& v, const U s)
-		-> Vec3<decltype(v.x + s)>
+		-> Vec3<decltype(v.x / s)>
 	{
-		return {v.x / s, v.y / s, v.z / s};
+		return { v.x / s, v.y / s, v.z / s };
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator/(const Vec3<T>& v1, const Vec3<U>& v2)
+		-> Vec3<decltype(v1.x / v2.x)>
+	{
+		auto temp(v1);
+		return temp /= v2;
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator/(const T s, const Vec3<U>& v)
+		-> Vec3<decltype(s / v.x)>
+	{
+		Vec3<decltype(s / v.x)>temp(s);
+		return temp /= v;
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator/(const Vec3<T>& v, const U s)
+		-> Vec3<decltype(v.x / s)>
+	{
+		auto temp(v);
+		return temp /= s;
 	};
 
 	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const Vec2<T>& v1, const Vec2<U>& v2)
-		-> Vec2<decltype(v1.x + v2.x)>
-	{
-		return {v1.x / v2.x, v1.y / v2.y};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const T s, const Vec2<U>& v)
-		-> Vec2<decltype(s + v.x)>
-	{
-		return {s / v.x, s / v.y};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const Vec2<T>& v, const U s)
-		-> Vec2<decltype(v.x + s)>
-	{
-		return {v.x / s, v.y / s};
-	};
-	template <class T, class U> _HOST_DEVICE
 		inline auto operator/=(const Vec2<T>& v1, const Vec2<U>& v2)
-		-> Vec2<decltype(v1.x + v2.x)>
+		-> Vec2<decltype(v1.x / v2.x)>
 	{
-		return {v1.x / v2.x, v1.y / v2.y};
+		return { v1.x / v2.x, v1.y / v2.y };
 	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator/=(const Vec2<T>& v, const U s)
-		-> Vec2<decltype(v.x + s)>
+		-> Vec2<decltype(v.x / s)>
 	{
-		return {v.x / s, v.y / s};
+		return { v.x / s, v.y / s };
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator/(const Vec2<T>& v1, const Vec2<U>& v2)
+		-> Vec2<decltype(v1.x / v2.x)>
+	{
+		auto temp(v1);
+		return temp /= v2;
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator/(const T s, const Vec2<U>& v)
+		-> Vec2<decltype(s / v.x)>
+	{
+		Vec2<decltype(s / v.x)>temp(s);
+		return temp /= v;
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator/(const Vec2<T>& v, const U s)
+		-> Vec2<decltype(v.x / s)>
+	{
+		auto temp(v);
+		return temp /= s;
 	};
 
 	/* -------------------------------------------------------------------------- */
@@ -471,96 +489,105 @@ namespace jek
 	/* -------------------------------------------------------------------------- */
 
 	template <class T, class U> _HOST_DEVICE
+		inline auto operator+=(const Vec4<T>& v1, const Vec4<U>& v2)
+		-> Vec4<decltype(v1.x + v2.x)>
+	{
+		return { v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w };
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator+=(const Vec4<T>& v, const U s)
+		-> Vec4<decltype(v.x + s)>
+	{
+		return { s + v.x, s + v.y, s + v.z, s + v.w };
+	};
+	template <class T, class U> _HOST_DEVICE
 		inline auto operator+(const Vec4<T>& v1, const Vec4<U>& v2) 
 		-> Vec4<decltype(v1.x + v2.x)>
 	{
-		return {v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w};
+		auto temp(v1);
+		return temp += v2;
 	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator+(const T s, const Vec4<U>& v)
 		-> Vec4<decltype(s + v.x)>
 	{
-		return {s + v.x, s + v.y, s + v.z, s + v.w};
+		auto temp(v);
+		return temp += s;
 	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator+(const Vec4<T>& v, const U s)
 		-> Vec4<decltype(v.x + s)>
 	{
-		return {s + v.x, s + v.y, s + v.z, s + v.w};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+=(const Vec4<T>& v1, const Vec4<U>& v2) 
-		-> Vec4<decltype(v1.x + v2.x)>
-	{
-		return {v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+=(const Vec4<T>& v, const U s) 
-		-> Vec4<decltype(v.x + s)>
-	{
-		return {s + v.x, s + v.y, s + v.z, s + v.w};
+		auto temp(v);
+		return temp += s;
 	};
 
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+(const Vec3<T>& v1, const Vec3<U>& v2)
-		-> Vec3<decltype(v1.x + v2.x)>
-	{
-		return {v1.x + v2.x, v1.y + v2.y, v1.z + v2.z};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+(const T s, const Vec3<U>& v)
-		-> Vec3<decltype(s + v.x)>
-	{
-		return {s + v.x, s + v.y, s + v.z};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+(const Vec3<T>& v, const U s)
-		-> Vec3<decltype(v.x + s)>
-	{
-		return {s + v.x, s + v.y, s + v.z};
-	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator+=(const Vec3<T>& v1, const Vec3<U>& v2)
 		-> Vec3<decltype(v1.x + v2.x)>
 	{
-		return {v1.x + v2.x, v1.y + v2.y, v1.z + v2.z};
+		return { v1.x + v2.x, v1.y + v2.y, v1.z + v2.z };
 	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator+=(const Vec3<T>& v, const U s)
 		-> Vec3<decltype(v.x + s)>
 	{
-		return {s + v.x, s + v.y, s + v.z};
+		return { s + v.x, s + v.y, s + v.z };
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator+(const Vec3<T>& v1, const Vec3<U>& v2)
+		-> Vec3<decltype(v1.x + v2.x)>
+	{
+		auto temp(v1);
+		return temp += v2;
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator+(const T s, const Vec3<U>& v)
+		-> Vec3<decltype(s + v.x)>
+	{
+		auto temp(v);
+		return temp += s;
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator+(const Vec3<T>& v, const U s)
+		-> Vec3<decltype(v.x + s)>
+	{
+		auto temp(v);
+		return temp += s;
 	};
 
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+(const Vec2<T>& v1, const Vec2<U>& v2)
-		-> Vec2<decltype(v1.x + v2.x)>
-	{
-		return {v1.x + v2.x, v1.y + v2.y};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+(const T s, const Vec2<U>& v)
-		-> Vec2<decltype(s + v.x)>
-	{
-		return {s + v.x, s + v.y};
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+(const Vec2<T>& v, const U s)
-		-> Vec2<decltype(v.x + s)>
-	{
-		return {s + v.x, s + v.y};
-	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator+=(const Vec2<T>& v1, const Vec2<U>& v2)
 		-> Vec2<decltype(v1.x + v2.x)>
 	{
-		return {v1.x + v2.x, v1.y + v2.y};
+		return { v1.x + v2.x, v1.y + v2.y };
 	};
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator+=(const Vec2<T>& v, const U s)
 		-> Vec2<decltype(v.x + s)>
 	{
-		return {s + v.x, s + v.y};
+		return { s + v.x, s + v.y };
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator+(const Vec2<T>& v1, const Vec2<U>& v2)
+		-> Vec2<decltype(v1.x + v2.x)>
+	{
+		auto temp(v1);
+		return temp += v2;
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator+(const T s, const Vec2<U>& v)
+		-> Vec2<decltype(s + v.x)>
+	{
+		auto temp(v);
+		return temp += s;
+	};
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator+(const Vec2<T>& v, const U s)
+		-> Vec2<decltype(v.x + s)>
+	{
+		auto temp(v);
+		return temp += s;
 	};
 
 	/* -------------------------------------------------------------------------- */
@@ -568,96 +595,105 @@ namespace jek
 	/* -------------------------------------------------------------------------- */
 
 	template <class T, class U> _HOST_DEVICE
-		inline auto operator-(const Vec4<T>& v1, const Vec4<U>& v2) 
-		-> Vec4<decltype(v1.x + v2.x)>
+		inline auto operator-=(const Vec4<T>& v1, const Vec4<U>& v2)
+		-> Vec4<decltype(v1.x - v2.x)>
 	{
-		return {v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w};
+		return { v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w };
+	}
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator-=(const Vec4<T>& v, const U s)
+		-> Vec4<decltype(v.x - s)>
+	{
+		return { v.x - s, v.y - s, v.z - s, v.w - s };
+	}
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator-(const Vec4<T>& v1, const Vec4<U>& v2) 
+		-> Vec4<decltype(v1.x - v2.x)>
+	{
+		auto temp(v1);
+		return temp -= v2;
 	}
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator-(const T s, const Vec4<U>& v)
-		-> Vec4<decltype(s + v.x)>
+		-> Vec4<decltype(s - v.x)>
 	{
-		return {s - v.x, s - v.y, s - v.z, s - v.w};
+		Vec4<decltype(s - v.x)>temp(s);
+		return temp -= v;
 	}
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator-(const Vec4<T>& v, const U s) 
-		-> Vec4<decltype(v.x + s)>
+		-> Vec4<decltype(v.x - s)>
 	{
-		return {v.x - s, v.y - s, v.z - s, v.w - s};
-	}
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-=(const Vec4<T>& v1, const Vec4<U>& v2) 
-		-> Vec4<decltype(v1.x + v2.x)>
-	{
-		return {v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w};
-	}
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-=(const Vec4<T>& v, const U s) 
-		-> Vec4<decltype(v.x + s)>
-	{
-		return {v.x - s, v.y - s, v.z - s, v.w - s};
+		auto temp(v);
+		return temp -= s;
 	}
 
 	template <class T, class U> _HOST_DEVICE
-		inline auto operator-(const Vec3<T>& v1, const Vec3<U>& v2) 
-		-> Vec3<decltype(v1.x + v2.x)>
+		inline auto operator-=(const Vec3<T>& v1, const Vec3<U>& v2)
+		-> Vec3<decltype(v1.x - v2.x)>
 	{
-		return {v1.x - v2.x, v1.y - v2.y, v1.z - v2.z};
+		return { v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
+	}
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator-=(const Vec3<T>& v, const U s)
+		-> Vec3<decltype(v.x - s)>
+	{
+		return { v.x - s, v.y - s, v.z - s };
+	}
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator-(const Vec3<T>& v1, const Vec3<U>& v2) 
+		-> Vec3<decltype(v1.x - v2.x)>
+	{
+		auto temp(v1);
+		return temp -= v2;
 	}
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator-(const T s, const Vec3<U>& v) 
-		-> Vec3<decltype(s + v.x)>
+		-> Vec3<decltype(s - v.x)>
 	{
-		return {s - v.x, s - v.y, s - v.z};
+		Vec3<decltype(s - v.x)>temp(s);
+		return temp -= v;
 	}
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator-(const Vec3<T>& v, const U s) 
-		-> Vec3<decltype(v.x + s)>
+		-> Vec3<decltype(v.x - s)>
 	{
-		return {v.x - s, v.y - s, v.z - s};
-	}
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-=(const Vec3<T>& v1, const Vec3<U>& v2)
-		-> Vec3<decltype(v1.x + v2.x)>
-	{
-		return {v1.x - v2.x, v1.y - v2.y, v1.z - v2.z};
-	}
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-=(const Vec3<T>& v, const U s) 
-		-> Vec3<decltype(v.x + s)>
-	{
-		return {v.x - s, v.y - s, v.z - s};
+		auto temp(v);
+		return temp -= s;
 	}
 
 	template <class T, class U> _HOST_DEVICE
-		inline auto operator-(const Vec2<T>& v1, const Vec2<U>& v2)
-		-> Vec2<decltype(v1.x + v2.x)>
+		inline auto operator-=(const Vec2<T>& v1, const Vec2<U>& v2)
+		-> Vec2<decltype(v1.x - v2.x)>
 	{
-		return {v1.x - v2.x, v1.y - v2.y};
+		return { v1.x - v2.x, v1.y - v2.y };
+	}
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator-=(const Vec2<T>& v, const U s)
+		-> Vec2<decltype(v.x - s)>
+	{
+		return { v.x - s, v.y - s };
+	}
+	template <class T, class U> _HOST_DEVICE
+		inline auto operator-(const Vec2<T>& v1, const Vec2<U>& v2)
+		-> Vec2<decltype(v1.x - v2.x)>
+	{
+		auto temp(v1);
+		return temp -= v2;
 	}
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator-(const T s, const Vec2<U>& v)
-		-> Vec2<decltype(s + v.x)>
+		-> Vec2<decltype(s - v.x)>
 	{
-		return {s - v.x, s - v.y};
+		Vec2<decltype(s - v.x)>temp(s);
+		return temp -= v;
 	}
 	template <class T, class U> _HOST_DEVICE
 		inline auto operator-(const Vec2<T>& v, const U s) 
-		-> Vec2<decltype(v.x + s)>
+		-> Vec2<decltype(v.x - s)>
 	{
-		return {v.x - s, v.y - s};
-	}
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-=(const Vec2<T>& v1, const Vec2<U>& v2)
-		-> Vec2<decltype(v1.x + v2.x)>
-	{
-		return {v1.x - v2.x, v1.y - v2.y};
-	}
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-=(const Vec2<T>& v, const U s) 
-		-> Vec2<decltype(v.x + s)>
-	{
-		return {v.x - s, v.y - s};
+		auto temp(v);
+		return temp -= s;
 	}
 
 	/* -------------------------------------------------------------------------- */
