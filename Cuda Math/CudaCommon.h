@@ -5,6 +5,33 @@
 #define _HOST_DEVICE
 #define _DEVICE
 #define _HOST
+
+struct float4 
+{
+	float x, y, z, w;
+};
+struct float3
+{
+	float x, y, z;
+};
+struct float2
+{
+	float x, y;
+};
+
+float4 make_float4(float x, float y, float z, float w)
+{
+	return float4();
+}
+float3 make_float3(float x, float y, float z)
+{
+	return float3();
+}
+float2 make_float2(float x, float y)
+{
+	return float2();
+}
+
 #else
 #include "cuda_runtime.h"
 #define _HOST_DEVICE __host__ __device__

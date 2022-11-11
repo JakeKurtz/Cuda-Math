@@ -14,7 +14,9 @@ namespace jek
 
 	template <class T> struct _ALIGN(16) Vec4
 	{
-		//static_assert(sizeof(T) == 4, "T is not 4 bytes");
+		static_assert(sizeof(T) == 4, "Type must be 4 bytes");
+		static_assert(std::is_arithmetic<T>::value, "Type must be must be numeric");
+
 		T x{}, y{}, z{}, w{};
 		_HOST_DEVICE Vec4() {};
 		_HOST_DEVICE Vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {};
@@ -24,6 +26,10 @@ namespace jek
 		_HOST_DEVICE Vec4(const Vec3<T>& v) : x(v.x), y(v.y), z(v.z), w(0) {};
 		_HOST_DEVICE Vec4(const Vec2<T>&v, T z, T w) : x(v.x), y(v.y), z(z), w(w) {};
 		_HOST_DEVICE Vec4(const Vec2<T>&v) : x(v.x), y(v.y), z(0), w(0) {};
+
+		_HOST_DEVICE Vec4(const float4& v) : x(v.x), y(v.y), z(v.z), w(v.w) {};
+		_HOST_DEVICE Vec4(const float3& v) : x(v.x), y(v.y), z(v.z), w(0) {};
+		_HOST_DEVICE Vec4(const float2& v) : x(v.x), y(v.y), z(0), w(0) {};
 
 		_HOST Vec4(const glm::vec4 & v) : x(v.x), y(v.y), z(v.z), w(v.w) {};
 		_HOST Vec4(const glm::vec3 & v) : x(v.x), y(v.y), z(v.z), w(0) {};
@@ -43,6 +49,19 @@ namespace jek
 		_HOST_DEVICE operator Vec2<U>() const
 		{
 			return Vec2<U>(x, y);
+		};
+
+		_HOST_DEVICE operator float4() const
+		{
+			return make_float4(x, y, z, w);
+		};
+		_HOST_DEVICE operator float3() const
+		{
+			return make_float3(x, y, z);
+		};
+		_HOST_DEVICE operator float2() const
+		{
+			return make_float2(x, y);
 		};
 
 		_HOST operator glm::vec4() const
@@ -65,7 +84,9 @@ namespace jek
 	};
 	template <class T> struct _ALIGN(16) Vec3
 	{
-		static_assert(sizeof(T) == 4, "T is not 4 bytes");
+		static_assert(sizeof(T) == 4, "Type must be 4 bytes");
+		static_assert(std::is_arithmetic<T>::value, "Type must be must be numeric");
+
 		T x{}, y{}, z{};
 		_HOST_DEVICE Vec3() {};
 		_HOST_DEVICE Vec3(T x, T y, T z) : x(x), y(y), z(z) {};
@@ -74,6 +95,10 @@ namespace jek
 		_HOST_DEVICE Vec3(const Vec3<T>&v) : x(v.x), y(v.y), z(v.z) {};
 		_HOST_DEVICE Vec3(const Vec2<T>&v, T z) : x(v.x), y(v.y), z(z) {};
 		_HOST_DEVICE Vec3(const Vec2<T>&v) : x(v.x), y(v.y), z(0) {};
+
+		_HOST_DEVICE Vec3(const float4& v) : x(v.x), y(v.y), z(v.z) {};
+		_HOST_DEVICE Vec3(const float3& v) : x(v.x), y(v.y), z(v.z) {};
+		_HOST_DEVICE Vec3(const float2& v) : x(v.x), y(v.y), z(0) {};
 
 		_HOST Vec3(const glm::vec4 & v) : x(v.x), y(v.y), z(v.z) {};
 		_HOST Vec3(const glm::vec3 & v) : x(v.x), y(v.y), z(v.z) {};
@@ -93,6 +118,19 @@ namespace jek
 		_HOST_DEVICE operator Vec2<U>() const
 		{
 			return Vec2<U>(x, y);
+		};
+
+		_HOST_DEVICE operator float4() const
+		{
+			return make_float4(x, y, z, 0.f);
+		};
+		_HOST_DEVICE operator float3() const
+		{
+			return make_float3(x, y, z);
+		};
+		_HOST_DEVICE operator float2() const
+		{
+			return make_float2(x, y);
 		};
 
 		_HOST operator glm::vec4() const
@@ -115,7 +153,9 @@ namespace jek
 	};
 	template <class T> struct _ALIGN(8) Vec2
 	{
-		static_assert(sizeof(T) == 4, "T is not 4 bytes");
+		static_assert(sizeof(T) == 4, "Type must be 4 bytes");
+		static_assert(std::is_arithmetic<T>::value, "Type must be must be numeric");
+
 		T x{}, y{};
 		_HOST_DEVICE Vec2() {};
 		_HOST_DEVICE Vec2(T x, T y) : x(x), y(y) {};
@@ -123,6 +163,10 @@ namespace jek
 		_HOST_DEVICE Vec2(const Vec4<T>&v) : x(v.x), y(v.y) {};
 		_HOST_DEVICE Vec2(const Vec3<T>&v) : x(v.x), y(v.y) {};
 		_HOST_DEVICE Vec2(const Vec2<T>&v) : x(v.x), y(v.y) {};
+
+		_HOST_DEVICE Vec2(const float4& v) : x(v.x), y(v.y) {};
+		_HOST_DEVICE Vec2(const float3& v) : x(v.x), y(v.y) {};
+		_HOST_DEVICE Vec2(const float2& v) : x(v.x), y(v.y) {};
 
 		_HOST Vec2(const glm::vec4 & v) : x(v.x), y(v.y) {};
 		_HOST Vec2(const glm::vec3 & v) : x(v.x), y(v.y) {};
@@ -142,6 +186,19 @@ namespace jek
 		_HOST_DEVICE operator Vec2<U>() const
 		{
 			return Vec2<U>(x, y);
+		};
+
+		_HOST_DEVICE operator float4() const
+		{
+			return make_float4(x, y, 0.f, 0.f);
+		};
+		_HOST_DEVICE operator float3() const
+		{
+			return make_float3(x, y, 0.f);
+		};
+		_HOST_DEVICE operator float2() const
+		{
+			return make_float2(x, y);
 		};
 
 		_HOST operator glm::vec4() const
@@ -995,7 +1052,8 @@ namespace jek
 	template <template<class> class VecType, class T> _HOST_DEVICE
 		inline VecType<T> normalize(const VecType<T>&v)
 	{
-		return (v == VecType<T>(0)) ? v : v / length(v);
+		float l = length(v);
+		return (l == 0.f) ? v : v / l;
 	}
 	template <template<class> class VecType, class T> _HOST_DEVICE
 		inline VecType<T> remap(const VecType<T>&h1, const VecType<T>&l1, const VecType<T>&h2, const VecType<T>&l2, const VecType<T>&v)
