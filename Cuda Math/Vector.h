@@ -14,34 +14,35 @@ namespace jek
 
 	template <class T> struct _ALIGN(16) Vec4
 	{
-		//static_assert(sizeof(T) == 4, "T is not 4 bytes");
+		static_assert(sizeof(T) == 4, "T is not 4 bytes");
 		T x{}, y{}, z{}, w{};
 		_HOST_DEVICE Vec4() {};
 		_HOST_DEVICE Vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {};
 		_HOST_DEVICE Vec4(T s) : x(s), y(s), z(s), w(s) {};
-
+		_HOST_DEVICE Vec4(const Vec4<T>&v) : x(v.x), y(v.y), z(v.z), w(v.w) {};
 		_HOST_DEVICE Vec4(const Vec3<T>&v, T w) : x(v.x), y(v.y), z(v.z), w(w) {};
+		_HOST_DEVICE Vec4(const Vec3<T>& v) : x(v.x), y(v.y), z(v.z), w(0) {};
 		_HOST_DEVICE Vec4(const Vec2<T>&v, T z, T w) : x(v.x), y(v.y), z(z), w(w) {};
-
-		_HOST_DEVICE Vec4(const Vec3<T>&v) : x(v.x), y(v.y), z(v.z), w(0) {};
 		_HOST_DEVICE Vec4(const Vec2<T>&v) : x(v.x), y(v.y), z(0), w(0) {};
 
 		_HOST Vec4(const glm::vec4 & v) : x(v.x), y(v.y), z(v.z), w(v.w) {};
 		_HOST Vec4(const glm::vec3 & v) : x(v.x), y(v.y), z(v.z), w(0) {};
 		_HOST Vec4(const glm::vec2 & v) : x(v.x), y(v.y), z(0), w(0) {};
 
-		template <class U> _HOST_DEVICE operator Vec4<U>() const
+		template <class U>
+		_HOST_DEVICE operator Vec4<U>() const
 		{
 			return Vec4<U>(x, y, z, w);
 		};
-
-		_HOST_DEVICE operator Vec3<T>() const
+		template <class U>
+		_HOST_DEVICE operator Vec3<U>() const
 		{
-			return Vec3<T>(x, y, z);
+			return Vec3<U>(x, y, z);
 		};
-		_HOST_DEVICE operator Vec2<T>() const
+		template <class U>
+		_HOST_DEVICE operator Vec2<U>() const
 		{
-			return Vec2<T>(x, y);
+			return Vec2<U>(x, y);
 		};
 
 		_HOST operator glm::vec4() const
@@ -64,33 +65,34 @@ namespace jek
 	};
 	template <class T> struct _ALIGN(16) Vec3
 	{
-		//static_assert(sizeof(T) == 4, "T is not 4 bytes");
+		static_assert(sizeof(T) == 4, "T is not 4 bytes");
 		T x{}, y{}, z{};
 		_HOST_DEVICE Vec3() {};
 		_HOST_DEVICE Vec3(T x, T y, T z) : x(x), y(y), z(z) {};
 		_HOST_DEVICE Vec3(T s) : x(s), y(s), z(s) {};
-
 		_HOST_DEVICE Vec3(const Vec4<T>&v) : x(v.x), y(v.y), z(v.z) {};
+		_HOST_DEVICE Vec3(const Vec3<T>&v) : x(v.x), y(v.y), z(v.z) {};
 		_HOST_DEVICE Vec3(const Vec2<T>&v, T z) : x(v.x), y(v.y), z(z) {};
-
 		_HOST_DEVICE Vec3(const Vec2<T>&v) : x(v.x), y(v.y), z(0) {};
 
 		_HOST Vec3(const glm::vec4 & v) : x(v.x), y(v.y), z(v.z) {};
 		_HOST Vec3(const glm::vec3 & v) : x(v.x), y(v.y), z(v.z) {};
 		_HOST Vec3(const glm::vec2 & v) : x(v.x), y(v.y), z(0) {};
 
-		template <class U> _HOST_DEVICE operator Vec3<U>() const
+		template <class U>
+		_HOST_DEVICE operator Vec4<U>() const
+		{
+			return Vec4<U>(x, y, z, 0);
+		};
+		template <class U>
+		_HOST_DEVICE operator Vec3<U>() const
 		{
 			return Vec3<U>(x, y, z);
 		};
-
-		_HOST_DEVICE operator Vec4<T>() const
+		template <class U>
+		_HOST_DEVICE operator Vec2<U>() const
 		{
-			return Vec4<T>(x, y, z, 0);
-		};
-		_HOST_DEVICE operator Vec2<T>() const
-		{
-			return Vec2<T>(x, y);
+			return Vec2<U>(x, y);
 		};
 
 		_HOST operator glm::vec4() const
@@ -113,31 +115,33 @@ namespace jek
 	};
 	template <class T> struct _ALIGN(8) Vec2
 	{
-		//static_assert(sizeof(T) == 4, "T is not 4 bytes");
+		static_assert(sizeof(T) == 4, "T is not 4 bytes");
 		T x{}, y{};
 		_HOST_DEVICE Vec2() {};
 		_HOST_DEVICE Vec2(T x, T y) : x(x), y(y) {};
 		_HOST_DEVICE Vec2(T s) : x(s), y(s) {};
-
 		_HOST_DEVICE Vec2(const Vec4<T>&v) : x(v.x), y(v.y) {};
 		_HOST_DEVICE Vec2(const Vec3<T>&v) : x(v.x), y(v.y) {};
+		_HOST_DEVICE Vec2(const Vec2<T>&v) : x(v.x), y(v.y) {};
 
 		_HOST Vec2(const glm::vec4 & v) : x(v.x), y(v.y) {};
 		_HOST Vec2(const glm::vec3 & v) : x(v.x), y(v.y) {};
 		_HOST Vec2(const glm::vec2 & v) : x(v.x), y(v.y) {};
 
-		template <class U> _HOST_DEVICE operator Vec2<U>() const
+		template <class U>
+		_HOST_DEVICE operator Vec4<U>() const
+		{
+			return Vec4<U>(x, y, 0, 0);
+		};
+		template <class U>
+		_HOST_DEVICE operator Vec3<U>() const
+		{
+			return Vec3<U>(x, y, 0);
+		};
+		template <class U>
+		_HOST_DEVICE operator Vec2<U>() const
 		{
 			return Vec2<U>(x, y);
-		};
-
-		_HOST_DEVICE operator Vec4<T>() const
-		{
-			return Vec4<T>(x, y, 0, 0);
-		};
-		_HOST_DEVICE operator Vec3<T>() const
-		{
-			return Vec3<T>(x, y, 0);
 		};
 
 		_HOST operator glm::vec4() const
@@ -176,94 +180,94 @@ namespace jek
 	/* -------------------------------------------------------------------------- */
 
 	template <class T, class U> _HOST_DEVICE
-		bool operator==(const Vec4<T>& v1, const Vec4<U>& v2)
+		inline bool operator==(const Vec4<T>& v1, const Vec4<U>& v2)
 	{
 		return (v1.x == v2.x && v1.y == v2.y && v1.z == v2.z && v1.w == v2.w);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator!=(const Vec4<T>& v1, const Vec4<U>& v2)
+		inline bool operator!=(const Vec4<T>& v1, const Vec4<U>& v2)
 	{
 		return (v1.x != v2.x || v1.y != v2.y || v1.z != v2.z || v1.w != v2.w);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator<(const Vec4<T>& v1, const Vec4<U>& v2)
+		inline bool operator<(const Vec4<T>& v1, const Vec4<U>& v2)
 	{
 		return (v1.x < v2.x&& v1.y < v2.y&& v1.z < v2.z&& v1.w < v2.w);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator<=(const Vec4<T>& v1, const Vec4<U>& v2)
+		inline bool operator<=(const Vec4<T>& v1, const Vec4<U>& v2)
 	{
 		return (v1.x <= v2.x && v1.y <= v2.y && v1.z <= v2.z && v1.w <= v2.w);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator>(const Vec4<T>& v1, const Vec4<U>& v2)
+		inline bool operator>(const Vec4<T>& v1, const Vec4<U>& v2)
 	{
 		return (v1.x > v2.x && v1.y > v2.y && v1.z > v2.z && v1.w > v2.w);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator>=(const Vec4<T>& v1, const Vec4<U>& v2)
+		inline bool operator>=(const Vec4<T>& v1, const Vec4<U>& v2)
 	{
 		return (v1.x >= v2.x && v1.y >= v2.y && v1.z >= v2.z && v1.w >= v2.w);
 	};
 
 	template <class T, class U> _HOST_DEVICE
-		bool operator==(const Vec3<T>& v1, const Vec3<U>& v2)
+		inline bool operator==(const Vec3<T>& v1, const Vec3<U>& v2)
 	{
 		return (v1.x == v2.x && v1.y == v2.y && v1.z == v2.z);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator!=(const Vec3<T>& v1, const Vec3<U>& v2)
+		inline bool operator!=(const Vec3<T>& v1, const Vec3<U>& v2)
 	{
 		return (v1.x != v2.x || v1.y != v2.y || v1.z != v2.z);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator<(const Vec3<T>& v1, const Vec3<U>& v2)
+		inline bool operator<(const Vec3<T>& v1, const Vec3<U>& v2)
 	{
 		return (v1.x < v2.x&& v1.y < v2.y&& v1.z < v2.z);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator<=(const Vec3<T>& v1, const Vec3<U>& v2)
+		inline bool operator<=(const Vec3<T>& v1, const Vec3<U>& v2)
 	{
 		return (v1.x <= v2.x && v1.y <= v2.y && v1.z <= v2.z);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator>(const Vec3<T>& v1, const Vec3<U>& v2)
+		inline bool operator>(const Vec3<T>& v1, const Vec3<U>& v2)
 	{
 		return (v1.x > v2.x && v1.y > v2.y && v1.z > v2.z);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator>=(const Vec3<T>& v1, const Vec3<U>& v2)
+		inline bool operator>=(const Vec3<T>& v1, const Vec3<U>& v2)
 	{
 		return (v1.x >= v2.x && v1.y >= v2.y && v1.z >= v2.z);
 	};
 
 	template <class T, class U> _HOST_DEVICE
-		bool operator==(const Vec2<T>& v1, const Vec2<U>& v2)
+		inline bool operator==(const Vec2<T>& v1, const Vec2<U>& v2)
 	{
 		return (v1.x == v2.x && v1.y == v2.y);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator!=(const Vec2<T>& v1, const Vec2<U>& v2)
+		inline bool operator!=(const Vec2<T>& v1, const Vec2<U>& v2)
 	{
 		return (v1.x != v2.x || v1.y != v2.y);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator<(const Vec2<T>& v1, const Vec2<U>& v2)
+		inline bool operator<(const Vec2<T>& v1, const Vec2<U>& v2)
 	{
 		return (v1.x < v2.x&& v1.y < v2.y);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator<=(const Vec2<T>& v1, const Vec2<U>& v2)
+		inline bool operator<=(const Vec2<T>& v1, const Vec2<U>& v2)
 	{
 		return (v1.x <= v2.x && v1.y <= v2.y);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator>(const Vec2<T>& v1, const Vec2<U>& v2)
+		inline bool operator>(const Vec2<T>& v1, const Vec2<U>& v2)
 	{
 		return (v1.x > v2.x && v1.y > v2.y);
 	};
 	template <class T, class U> _HOST_DEVICE
-		bool operator>=(const Vec2<T>& v1, const Vec2<U>& v2)
+		inline bool operator>=(const Vec2<T>& v1, const Vec2<U>& v2)
 	{
 		return (v1.x >= v2.x && v1.y >= v2.y);
 	};
@@ -273,7 +277,7 @@ namespace jek
 	/* -------------------------------------------------------------------------- */
 
 	template <class T, class U> _HOST_DEVICE
-		auto operator*(const Vec4<T>& v1, const Vec4<U>& v2) 
+		inline auto operator*(const Vec4<T>& v1, const Vec4<U>& v2)
 		-> Vec4<decltype(v1.x + v2.x)>
 	{
 		return { v1.x * v2.x, v1.y * v2.y, v1.z * v2.z, v1.w * v2.w };
@@ -304,62 +308,62 @@ namespace jek
 	};
 
 	template <class T, class U> _HOST_DEVICE
-		auto operator*(const Vec3<T>& v1, const Vec3<U>& v2) 
+		inline auto operator*(const Vec3<T>& v1, const Vec3<U>& v2)
 		-> Vec3<decltype(v1.x + v2.x)>
 	{
 		return {v1.x * v2.x, v1.y * v2.y, v1.z * v2.z};
 	};
 	template <class T, class U> _HOST_DEVICE
-		auto operator*(const T s, const Vec3<U>& v) 
+		inline auto operator*(const T s, const Vec3<U>& v)
 		-> Vec3<decltype(s + v.x)>
 	{
 		return {s * v.x, s * v.y, s * v.z};
 	};
 	template <class T, class U> _HOST_DEVICE
-		auto operator*(const Vec3<T>& v, const U s) 
+		inline auto operator*(const Vec3<T>& v, const U s)
 		-> Vec3<decltype(v.x + s)>
 	{
 		return {s * v.x, s * v.y, s * v.z};
 	};
 	template <class T, class U> _HOST_DEVICE
-		auto operator*=(const Vec3<T>& v1, const Vec3<U>& v2) 
+		inline auto operator*=(const Vec3<T>& v1, const Vec3<U>& v2)
 		-> Vec3<decltype(v1.x + v2.x)>
 	{
 		return {v1.x * v2.x, v1.y * v2.y, v1.z * v2.z};
 	};
 	template <class T, class U> _HOST_DEVICE
-		auto operator*=(const Vec3<T>& v, const U s) 
+		inline auto operator*=(const Vec3<T>& v, const U s)
 		-> Vec3<decltype(v.x + s)>
 	{
 		return {s * v.x, s * v.y, s * v.z};
 	};
 
 	template <class T, class U> _HOST_DEVICE
-		auto operator*(const Vec2<T>& v1, const Vec2<U>& v2) 
+		inline auto operator*(const Vec2<T>& v1, const Vec2<U>& v2)
 		-> Vec2<decltype(v1.x + v2.x)>
 	{
 		return {v1.x * v2.x, v1.y * v2.y};
 	};
 	template <class T, class U> _HOST_DEVICE
-		auto operator*(const T s, const Vec2<U>& v) 
+		inline auto operator*(const T s, const Vec2<U>& v)
 		-> Vec2<decltype(s + v.x)>
 	{
 		return {s * v.x, s * v.y};
 	};
 	template <class T, class U> _HOST_DEVICE
-		auto operator*(const Vec2<T>& v, const U s) 
+		inline auto operator*(const Vec2<T>& v, const U s)
 		-> Vec2<decltype(v.x + s)>
 	{
 		return {s * v.x, s * v.y};
 	};
 	template <class T, class U> _HOST_DEVICE
-		auto operator*=(const Vec2<T>& v1, const Vec2<U>& v2) 
+		inline auto operator*=(const Vec2<T>& v1, const Vec2<U>& v2)
 		-> Vec2<decltype(v1.x + v2.x)>
 	{
 		return {v1.x * v2.x, v1.y * v2.y};
 	};
 	template <class T, class U> _HOST_DEVICE
-		auto operator*=(const Vec2<T>& v, const U s) 
+		inline auto operator*=(const Vec2<T>& v, const U s)
 		-> Vec2<decltype(v.x + s)>
 	{
 		return {s * v.x, s * v.y};
@@ -819,49 +823,49 @@ namespace jek
 	/* -------------------------------------------------------------------------- */
 
 	template<class T> _HOST_DEVICE
-		Vec4<T> max(const Vec4<T>&x, const Vec4<T>&y)
+		inline Vec4<T> max(const Vec4<T>&x, const Vec4<T>&y)
 	{
 		return Vec4<T>(::fmax(x.x, y.x), ::fmax(x.y, y.y), ::fmax(x.z, y.z), ::fmax(x.w, y.w));
 	}
 	template<class T> _HOST_DEVICE
-		Vec4<T> max(const T x, const Vec4<T>&y)
+		inline Vec4<T> max(const T x, const Vec4<T>&y)
 	{
 		return Vec4<T>(::fmax(x, y.x), ::fmax(x, y.y), ::fmax(x, y.z), ::fmax(x, y.w));
 	}
 	template<class T> _HOST_DEVICE
-		Vec4<T> max(const Vec4<T>&x, const T y)
+		inline Vec4<T> max(const Vec4<T>&x, const T y)
 	{
 		return Vec4<T>(::fmax(x.x, y), ::fmax(x.y, y), ::fmax(x.z, y), ::fmax(x.w, y));
 	}
 
 	template<class T> _HOST_DEVICE
-		Vec3<T> max(const Vec3<T>&x, const Vec3<T>&y)
+		inline Vec3<T> max(const Vec3<T>&x, const Vec3<T>&y)
 	{
 		return Vec3<T>(::fmax(x.x, y.x), ::fmax(x.y, y.y), ::fmax(x.z, y.z));
 	}
 	template<class T> _HOST_DEVICE
-		Vec3<T> max(const T x, const Vec3<T>&y)
+		inline Vec3<T> max(const T x, const Vec3<T>&y)
 	{
 		return Vec3<T>(::fmax(x, y.x), ::fmax(x, y.y), ::fmax(x, y.z));
 	}
 	template<class T> _HOST_DEVICE
-		Vec3<T> max(const Vec3<T>&x, const T y)
+		inline Vec3<T> max(const Vec3<T>&x, const T y)
 	{
 		return Vec3<T>(::fmax(x.x, y), ::fmax(x.y, y), ::fmax(x.z, y));
 	}
 
 	template<class T> _HOST_DEVICE
-		Vec2<T> max(const Vec2<T>&x, const Vec2<T>&y)
+		inline Vec2<T> max(const Vec2<T>&x, const Vec2<T>&y)
 	{
 		return Vec2<T>(::fmax(x.x, y.x), ::fmax(x.y, y.y));
 	}
 	template<class T> _HOST_DEVICE
-		Vec2<T> max(const T x, const Vec2<T>&y)
+		inline Vec2<T> max(const T x, const Vec2<T>&y)
 	{
 		return Vec2<T>(::fmax(x, y.x), ::fmax(x, y.y));
 	}
 	template<class T> _HOST_DEVICE
-		Vec2<T> max(const Vec2<T>&x, const T y)
+		inline Vec2<T> max(const Vec2<T>&x, const T y)
 	{
 		return Vec2<T>(::fmax(x.x, y), ::fmax(x.y, y));
 	}
@@ -871,49 +875,49 @@ namespace jek
 	/* -------------------------------------------------------------------------- */
 
 	template<class T> _HOST_DEVICE
-		Vec4<T> min(const Vec4<T>&x, const Vec4<T>&y)
+		inline Vec4<T> min(const Vec4<T>&x, const Vec4<T>&y)
 	{
 		return Vec4<T>(::fmin(x.x, y.x), ::fmin(x.y, y.y), ::fmin(x.z, y.z), ::fmin(x.w, y.w));
 	}
 	template<class T> _HOST_DEVICE
-		Vec4<T> min(const T x, const Vec4<T>&y)
+		inline Vec4<T> min(const T x, const Vec4<T>&y)
 	{
 		return Vec4<T>(::fmin(x, y.x), ::fmin(x, y.y), ::fmin(x, y.z), ::fmin(x, y.w));
 	}
 	template<class T> _HOST_DEVICE
-		Vec4<T> min(const Vec4<T>&x, const T y)
+		inline Vec4<T> min(const Vec4<T>&x, const T y)
 	{
 		return Vec4<T>(::fmin(x.x, y), ::fmin(x.y, y), ::fmin(x.z, y), ::fmin(x.w, y));
 	}
 
 	template<class T> _HOST_DEVICE
-		Vec3<T> min(const Vec3<T>&x, const Vec3<T>&y)
+		inline Vec3<T> min(const Vec3<T>&x, const Vec3<T>&y)
 	{
 		return Vec3<T>(::fmin(x.x, y.x), ::fmin(x.y, y.y), ::fmin(x.z, y.z));
 	}
 	template<class T> _HOST_DEVICE
-		Vec3<T> min(const T x, const Vec3<T>&y)
+		inline Vec3<T> min(const T x, const Vec3<T>&y)
 	{
 		return Vec3<T>(::fmin(x, y.x), ::fmin(x, y.y), ::fmin(x, y.z));
 	}
 	template<class T> _HOST_DEVICE
-		Vec3<T> min(const Vec3<T>&x, const T y)
+		inline Vec3<T> min(const Vec3<T>&x, const T y)
 	{
 		return Vec3<T>(::fmin(x.x, y), ::fmin(x.y, y), ::fmin(x.z, y));
 	}
 
 	template<class T> _HOST_DEVICE
-		Vec2<T> min(const Vec2<T>&x, const Vec2<T>&y)
+		inline Vec2<T> min(const Vec2<T>&x, const Vec2<T>&y)
 	{
 		return Vec2<T>(::fmin(x.x, y.x), ::fmin(x.y, y.y));
 	}
 	template<class T> _HOST_DEVICE
-		Vec2<T> min(const T x, const Vec2<T>&y)
+		inline Vec2<T> min(const T x, const Vec2<T>&y)
 	{
 		return Vec2<T>(::fmin(x, y.x), ::fmin(x, y.y));
 	}
 	template<class T> _HOST_DEVICE
-		Vec2<T> min(const Vec2<T>&x, const T y)
+		inline Vec2<T> min(const Vec2<T>&x, const T y)
 	{
 		return Vec2<T>(::fmin(x.x, y), ::fmin(x.y, y));
 	}
@@ -923,17 +927,17 @@ namespace jek
 	/* -------------------------------------------------------------------------- */
 
 	template<class T> _HOST_DEVICE
-		Vec4<T> pow(const Vec4<T>&v, const T p)
+		inline Vec4<T> pow(const Vec4<T>&v, const T p)
 	{
 		return Vec4<T>(::pow(v.x, p), ::pow(v.y, p), ::pow(v.z, p), ::pow(v.w, p));
 	}
 	template<class T> _HOST_DEVICE
-		Vec3<T> pow(const Vec3<T>&v, const T p)
+		inline Vec3<T> pow(const Vec3<T>&v, const T p)
 	{
 		return Vec3<T>(::pow(v.x, p), ::pow(v.y, p), ::pow(v.z, p));
 	}
 	template<class T> _HOST_DEVICE
-		Vec2<T> pow(const Vec2<T>&v, const T p)
+		inline Vec2<T> pow(const Vec2<T>&v, const T p)
 	{
 		return Vec2<T>(::pow(v.x, p), ::pow(v.y, p));
 	}
