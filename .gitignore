@@ -361,3 +361,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Cuda Speed Tests/Cuda Speed Tests.vcxproj
+/Cuda Speed Tests/kernel.cu
+/Vector Test/Vector Test.vcxproj.filters
+/Vector Test/Vector Test.vcxproj
+/Vector Test/Vector Test.cpp
+/Vector Test/Quaternion Test.cpp
+/Vector Test/Matrix Test.cpp
+/Vector Test/Complex Test.cpp
