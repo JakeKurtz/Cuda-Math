@@ -92,7 +92,6 @@ namespace jek
             );
         };
     };
-
     template <class T> struct _ALIGN(64) Matrix3x3
     {
         static_assert(sizeof(T) == 4, "T is not 4 bytes");

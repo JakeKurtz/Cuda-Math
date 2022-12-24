@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cuda Math", "Cuda Math\Cuda
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vector Test", "Vector Test\Vector Test.vcxproj", "{AD6B5CF1-D62D-4463-881A-2194ABC4C6CE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cuda Speed Tests", "Cuda Speed Tests\Cuda Speed Tests.vcxproj", "{9CD187A7-8247-4FA5-8AC4-21A67DA8D73E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{AD6B5CF1-D62D-4463-881A-2194ABC4C6CE}.Release|x64.Build.0 = Release|x64
 		{AD6B5CF1-D62D-4463-881A-2194ABC4C6CE}.Release|x86.ActiveCfg = Release|Win32
 		{AD6B5CF1-D62D-4463-881A-2194ABC4C6CE}.Release|x86.Build.0 = Release|Win32
+		{9CD187A7-8247-4FA5-8AC4-21A67DA8D73E}.Debug|x64.ActiveCfg = Debug|x64
+		{9CD187A7-8247-4FA5-8AC4-21A67DA8D73E}.Debug|x64.Build.0 = Debug|x64
+		{9CD187A7-8247-4FA5-8AC4-21A67DA8D73E}.Debug|x86.ActiveCfg = Debug|x64
+		{9CD187A7-8247-4FA5-8AC4-21A67DA8D73E}.Debug|x86.Build.0 = Debug|x64
+		{9CD187A7-8247-4FA5-8AC4-21A67DA8D73E}.Release|x64.ActiveCfg = Release|x64
+		{9CD187A7-8247-4FA5-8AC4-21A67DA8D73E}.Release|x64.Build.0 = Release|x64
+		{9CD187A7-8247-4FA5-8AC4-21A67DA8D73E}.Release|x86.ActiveCfg = Release|x64
+		{9CD187A7-8247-4FA5-8AC4-21A67DA8D73E}.Release|x86.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
