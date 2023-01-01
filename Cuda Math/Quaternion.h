@@ -1,40 +1,63 @@
-#ifndef _JEK_QUAT_
-#define _JEK_QUAT_
+#ifndef _CML_QUAT_
+#define _CML_QUAT_
 
 #include "CudaCommon.h"
 #include "GLCommon.h"
 #include "Vector.h"
 #include "Matrix.h"
 
-namespace jek
+namespace cml
 {
-	template <class T> struct _ALIGN(16) Quat
+	template <ASX::ID, class T> struct quat_t;
+
+	template <typename T> using quat = quat_t<ASX::ID_value, T>;
+
+	typedef quat<float>		quatf;
+	typedef quat<int32_t>	quati;
+	typedef quat<uint32_t>	quatu;
+
+	template <ASX::ID t_id, typename T>
+	struct _ALIGN(sizeof(T) * 4) quat_t
 	{
-		static_assert(sizeof(T) == 4, "Type must be 4 bytes");
 		static_assert(std::is_arithmetic<T>::value, "Type must be must be numeric");
 
-		T a{}, i{}, j{}, k{};
-		_HOST_DEVICE Quat() {};
-		_HOST_DEVICE Quat(T a, T i, T j, T k) : a(a), i(i), j(j), k(k) {};
-		_HOST_DEVICE Quat(T s) : a(s), i(s), j(s), k(s) {};
-		_HOST_DEVICE Quat(const Quat<T>&q) : a(q.a), i(q.i), j(q.j), k(q.k) {};
-		_HOST_DEVICE Quat(T a, const Vec3<T>&q) : a(a), i(q.i), j(q.j), k(q.k) {};
+		typedef ASX::ASAGroup<T, t_id> ASX_ASA;
 
-		_HOST_DEVICE Quat(const float4& q) : a(q.a), i(q.i), j(q.j), k(q.k) {};
-		_HOST Quat(const glm::quat & q) : a(q.w), i(q.x), j(q.y), k(q.z) {};
+		union { T a; ASX_ASA dummy1; };
+		union { T i; ASX_ASA dummy2; };
+		union { T j; ASX_ASA dummy3; };
+		union { T k; ASX_ASA dummy4; };
 
-		template <class U>
-		_HOST_DEVICE operator Quat<U>() const
+		_HOST_DEVICE quat_t() {};
+
+		_HOST_DEVICE quat_t(T a, T i, T j, T k) : a(a), i(i), j(j), k(k) {};
+
+		_HOST_DEVICE quat_t(T s) : a(s), i(s), j(s), k(s) {};
+
+		template<ASX::ID u_id>
+		_HOST_DEVICE quat_t(const quat_t<u_id, T>&q) : a(q.a), i(q.i), j(q.j), k(q.k) {};
+
+		template<ASX::ID u_id>
+		_HOST_DEVICE quat_t(T a, const vec3<u_id, T>&q) : a(a), i(q.i), j(q.j), k(q.k) {};
+
+		_HOST_DEVICE quat_t(const float4 & q) : a(q.a), i(q.i), j(q.j), k(q.k) {};
+
+		_HOST quat_t(const glm::quat_t& q) : a(q.w), i(q.x), j(q.y), k(q.z) {};
+
+		template <ASX::ID u_id, class U>
+		_HOST_DEVICE operator quat_t<u_id, U>() const
 		{
-			return Quat<U>(a, i, j, k);
+			return quat_t<U>(a, i, j, k);
 		};
+
 		_HOST_DEVICE operator float4() const
 		{
 			return make_float4(a, i, j, k);
 		};
-		_HOST operator glm::quat() const
+
+		_HOST_DEVICE operator glm::quat_t() const
 		{
-			return glm::quat(a, i, j, k);
+			return glm::quat_t(a, i, j, k);
 		};
 
 		_HOST_DEVICE void print()
@@ -42,7 +65,8 @@ namespace jek
 			printf("%f + %fi + %fj + %fk\n", (float)a, (float)i, (float)j, (float)k);
 		};
 
-		_HOST_DEVICE void to_mat4(Matrix4x4<T>& mat)
+		template <ASX::ID u_id>
+		_HOST_DEVICE void to_mat4(Matrix4x4<T>&mat)
 		{
 			auto len = length(*this);
 			auto s = 2.f / (len * len);
@@ -58,39 +82,41 @@ namespace jek
 			auto m22 = 1.f - s * (i * i + j * j);
 
 			mat = Matrix4x4<T>(
-				m00, m10, m20, 0.f,
-				m01, m11, m21, 0.f,
-				m02, m12, m22, 0.f,
-				0.f, 0.f, 0.f, 1.f
-			);
+				m00, m10, m20, 0,
+				m01, m11, m21, 0,
+				m02, m12, m22, 0,
+				0,   0,   0,   1
+				);
 		}
-		_HOST_DEVICE void angle_axis(T& angle, Vec3<T>& axis)
+
+		template <ASX::ID u_id>
+		_HOST_DEVICE void angle_axis(T & angle, vec3<u_id, T>&axis)
 		{
-			if (Vec3<T>(i, j, k) == Vec3<T>(0.0)) {
-				axis = Vec3<T>(1, 0, 0);
+			if (vec3<ASX::ID_value, T>(i, j, k) == vec3<ASX::ID_value, T>(0.0)) {
+				axis = vec3<ASX::ID_value, T>(1, 0, 0);
 			}
 			else {
-				axis = normalize(Vec3<T>(i, j, k));
+				axis = normalize(vec3<ASX::ID_value, T>(i, j, k));
 			}
 			angle = 2.0 * ::atan2(::sqrt(i * i + j * j + k * k), a);
 		}
 	};
 
-	typedef Quat<float>		Quatf;
-	typedef Quat<int32_t>	Quati;
-	typedef Quat<uint32_t>	Quatu;
-
 	/* -------------------------------------------------------------------------- */
 	/*                                 Comparators                                */
 	/* -------------------------------------------------------------------------- */
 
-	template <class T, class U> _HOST_DEVICE
-		inline bool operator==(const Quat<T>& q1, const Quat<U>& q2)
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline bool operator==(const quat_t<t_id, T>& q1, const quat_t<u_id, U>& q2)
 	{
 		return (q1.a == q2.a && q1.i == q2.i && q1.j == q2.j && q1.k == q2.k)
 	}
-	template <class T, class U> _HOST_DEVICE
-		inline bool operator!=(const Quat<T>& q1, const Quat<U>& q2)
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline bool operator!=(const quat_t<t_id, T>& q1, const quat_t<u_id, U>& q2)
 	{
 		return (q1.a != q2.a || q1.i != q2.i || q1.j != q2.j || q1.k != q2.k)
 	}
@@ -99,9 +125,10 @@ namespace jek
 	/*                               Multiplication                               */
 	/* -------------------------------------------------------------------------- */
 
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*=(Quat<T>& q1, const Quat<U>& q2)
-		-> Quat<decltype(q1.a * q2.a)>
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline quat_t<t_id, T> operator*=(const quat_t<t_id, T>& q1, const quat_t<u_id, U>& q2)
 	{
 		auto s1 = q1.a * q2.a;
 		auto s2 = q1.i * q2.i;
@@ -126,72 +153,84 @@ namespace jek
 
 		return q1;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*=(Quat<T>& q, const U s)
-		-> Quat<decltype(q.x * s)>
+
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline auto operator*(const quat_t<t_id, T>& q1, const quat_t<u_id, U>& q2)
+		-> quat_t<ASX::ID_value, decltype(q1.a* q2.a)>
 	{
-		q = { s * q.a, s * q.i, s * q.j, s * q.k };
-		return q;
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const Quat<T>& q1, const Quat<U>& q2)
-		-> Quat<decltype(q1.a * q2.a)>
-	{
-		auto temp(q1);
+		quat_t<ASX::ID_value, decltype(q1.a* q2.a)> temp(q2);
 		return temp *= q2;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const T s, const Quat<U>& q)
-		-> Quat<decltype(s * q.a)>
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline quat_t<t_id, T> operator*=(quat_t<t_id, T>& q, const U s)
 	{
-		auto temp(q);
+		q.a *= s; q.i *= s; q.j *= s; q.k *= s;
+		return q;
+	};
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline auto operator*(const U s, const quat_t<t_id, T>& q)
+		-> quat_t<ASX::ID_value, decltype(s* q.a)>
+	{
+		quat_t<ASX::ID_value, decltype(s * q.a)> temp(q);
 		return temp *= s;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const Quat<T>& q, const U s)
-		-> Quat<decltype(q.a * s)>
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline auto operator*(const quat_t<t_id, T>& q, const U s)
+		-> quat_t<ASX::ID_value, decltype(q.a* s)>
 	{
-		auto temp(q);
+		quat_t<ASX::ID_value, decltype(s * q.a)> temp(q);
 		return temp *= s;
 	};
 
 	/* -------------------------------------------------------------------------- */
 	/*                                  Division                                  */
 	/* -------------------------------------------------------------------------- */
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/=(Quat<T>& q1, const Quat<U>& q2)
-		-> Quat<decltype(q1.a / q2.a)>
+
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline quat_t<t_id, T> operator/=(quat_t<t_id, T>& q1, const quat_t<u_id, U>& q2)
 	{
-		auto len = length(q2); auto len2 = len*len;
-		auto recip = Quat<U>(q2.a / len2, -q2.i / len2, -q2.j / len2, -q2.k / len2);
+		auto len = length(q2); auto len2 = len * len;
+		auto recip = quat_t<U>(q2.a / len2, -q2.i / len2, -q2.j / len2, -q2.k / len2);
 		return q1 *= recip;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/=(Quat<T>& q, const U s)
-		-> Quat<decltype(q.a / s)>
+
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline auto operator/(const quat_t<t_id, T>& q1, const quat_t<u_id, U>& q2)
+		-> quat_t<ASX::ID_value, decltype(q1.a/ q2.a)>
 	{
-		q = {q.a / s, q.k / s, q.j / s, q.k / s};
-		return q;
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const Quat<T>& q1, const Quat<U>& q2)
-		-> Quat<decltype(q1.a* q2.a)>
-	{
-		auto temp(q1);
+		quat_t<ASX::ID_value, decltype(q1.a/ q2.a)> temp(q2);
 		return temp /= q2;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const T s, const Quat<U>& q)
-		-> Quat<decltype(s / q.a)>
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline quat_t<t_id, T> operator/=(quat_t<t_id, T>& q, const U s)
 	{
-		Quat<decltype(s / q.a)>temp(s);
-		return temp /= q;
+		q.a /= s; q.i /= s; q.j /= s; q.k /= s;
+		return q;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const Quat<T>& q, const U s)
-		-> Quat<decltype(q.x / s)>
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline auto operator/(const U s, const quat_t<t_id, T>& q)
+		-> quat_t<ASX::ID_value, decltype(s/ q.a)>
 	{
-		auto temp(q);
+		quat_t<ASX::ID_value, decltype(s / q.a)> temp(q);
+		return temp /= s;
+	};
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline auto operator/(const quat_t<t_id, T>& q, const U s)
+		-> quat_t<ASX::ID_value, decltype(q.a/ s)>
+	{
+		quat_t<ASX::ID_value, decltype(s / q.a)> temp(q);
 		return temp /= s;
 	};
 
@@ -199,39 +238,45 @@ namespace jek
 	/*                                  Addition                                  */
 	/* -------------------------------------------------------------------------- */
 
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+=(Quat<T>& q1, const Quat<U>& q2)
-		-> Quat<decltype(q1.a + q2.a)>
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+		inline quat_t<t_id, T> operator+=(quat_t<t_id, T>& q1, const quat_t<u_id, U>& q2)
 	{
-		q1 = { q1.a + q2.a, q1.i + q2.i, q1.j + q2.j, q1.k + q2.k };
+		q1.a += q2.a; q1.i += q2.i; q1.j += q2.j; q1.k += q2.k;
 		return q1;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+=(Quat<T>& q, const U s)
-		-> Quat<decltype(q.a + s)>
+
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+		inline auto operator+(const quat_t<t_id, T>& q1, const quat_t<u_id, U>& q2)
+		-> quat_t<ASX::ID_value, decltype(q1.a + q2.a)>
 	{
-		q = { s + q.a, s + q.i, s + q.j, s + q.k };
-		return q;
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+(const Quat<T>& q1, const Quat<U>& q2)
-		-> Quat<decltype(q1.a + q2.a)>
-	{
-		auto temp(q1);
+		quat_t<ASX::ID_value, decltype(q1.a + q2.a)> temp(q2);
 		return temp += q2;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+(const T s, const Quat<U>& q)
-		-> Quat<decltype(s + q.a)>
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline quat_t<t_id, T> operator+=(quat_t<t_id, T>& q, const U s)
 	{
-		auto temp(q);
+		q.a += s; q.i += s; q.j += s; q.k += s;
+		return q;
+	};
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline auto operator+(const U s, const quat_t<t_id, T>& q)
+		-> quat_t<ASX::ID_value, decltype(s + q.a)>
+	{
+		quat_t<ASX::ID_value, decltype(s + q.a)> temp(q);
 		return temp += s;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+(const Quat<T>& q, const U s)
-		-> Quat<decltype(q.a + s)>
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline auto operator+(const quat_t<t_id, T>& q, const U s)
+		-> quat_t<ASX::ID_value, decltype(q.a + s)>
 	{
-		auto temp(q);
+		quat_t<ASX::ID_value, decltype(s + q.a)> temp(q);
 		return temp += s;
 	};
 
@@ -239,64 +284,75 @@ namespace jek
 	/*                                 Subtraction                                */
 	/* -------------------------------------------------------------------------- */
 
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-=(Quat<T>& q1, const Quat<U>& q2)
-		-> Quat<decltype(q1.a - q2.a)>
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline quat_t<t_id, T> operator-=(quat_t<t_id, T>& q1, const quat_t<u_id, U>& q2)
 	{
-		q1 = { q1.a - q2.a, q1.i - q2.i, q1.j - q2.j, q1.k - q2.k };
+		q1.a -= q2.a; q1.i -= q2.i; q1.j -= q2.j; q1.k -= q2.k;
 		return q1;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-=(Quat<T>& q, const U s)
-		-> Quat<decltype(q.a - s)>
+
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline auto operator-(const quat_t<t_id, T>& q1, const quat_t<u_id, U>& q2)
+		-> quat_t<ASX::ID_value, decltype(q1.a - q2.a)>
 	{
-		q = { q.a - s, q.i - s, q.j - s, q.k - s };
+		quat_t<ASX::ID_value, decltype(q1.a - q2.a)> temp(q2);
+		return temp -= q2;
+	};
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline quat_t<t_id, T> operator-=(quat_t<t_id, T>& q, const U s)
+	{
+		q.a -= s; q.i -= s; q.j -= s; q.k -= s;
 		return q;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-(const Quat<T>& q1, const Quat<U>& q2)
-		-> Quat<decltype(q1.a - q2.a)>
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline auto operator-(const U s, const quat_t<t_id, T>& q)
+		-> quat_t<ASX::ID_value, decltype(s - q.a)>
 	{
-		auto temp(q1);
-		return temp -= q2;
-	}
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-(const T s, const Quat<U>& q)
-		-> Quat<decltype(s - q.a)>
-	{
-		Quat<U>temp(s);
-		return temp -= q;
-	}
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-(const Quat<T>& q, const U s)
-		-> Quat<decltype(q.a - s)>
-	{
-		auto temp(q);
+		quat_t<ASX::ID_value, decltype(s - q.a)> temp(q);
 		return temp -= s;
+	};
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline auto operator-(const quat_t<t_id, T>& q, const U s)
+		-> quat_t<ASX::ID_value, decltype(q.a - s)>
+	{
+		quat_t<ASX::ID_value, decltype(s - q.a)> temp(q);
+		return temp -= s;
+	};
+
+
+	template <ASX::ID t_id, class T> _HOST_DEVICE
+	inline quat_t<ASX::ID_value, T> operator-(const quat_t<t_id, T>& q)
+	{
+		return quat_t<ASX::ID_value, T>(-q.a, -q.i, -q.j, -q.k);
 	}
 
-	template<class T> _HOST_DEVICE
-		inline Quat<T> operator-(const Quat<T>& q)
+	template <ASX::ID t_id, class T> _HOST_DEVICE
+	inline quat_t<ASX::ID_value, T> conjugate(const quat_t<t_id, T>& q)
 	{
-		return {-q.a, -q.i, -q.j, -q.k};
+		return quat_t<ASX::ID_value, T>(q.a, -q.i, -q.j, -q.k);
 	}
-	template<class T> _HOST_DEVICE
-		inline Quat<T> conjugate(const Quat<T>& q)
+
+	template <ASX::ID t_id, class T> _HOST_DEVICE
+	inline float length(const quat_t<t_id, T>& q)
 	{
-		return {q.a, -q.i, -q.j, -q.k};
+		return ::sqrt(q.i * q.i + q.j * q.j + q.k * q.k + q.a * q.a);
 	}
-	template<class T> _HOST_DEVICE
-		inline float length(const Quat<T>& q)
+
+	template <ASX::ID t_id, class T> _HOST_DEVICE
+	inline quat_t<ASX::ID_value, T> normalize(const quat_t<t_id, T>& q)
 	{
-		return ::sqrtf(q.i*q.i + q.j*q.j + q.k*q.k + q.a*q.a);
-	}
-	template <class T> _HOST_DEVICE
-		inline Quat<T> normalize(const Quat<T>& q)
-	{
-		float l = length(q);
-		return (l == 0.f) ? q : q / l;
+		quat_t<ASX::ID_value, T> temp(q);
+
+		float l = length(temp);
+		return (l == 0.f) ? temp : temp / l;
 	}
 
 }
-
-#endif // _JEK_QUAT_
+#endif // _CML_QUAT_

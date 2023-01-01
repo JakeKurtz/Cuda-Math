@@ -1,71 +1,112 @@
-#ifndef _JEK_COMPLEX_
-#define _JEK_COMPLEX_
+#ifndef _CML_COMPLEX_
+#define _CML_COMPLEX_
 
 #include "CudaCommon.h"
 #include "GLCommon.h"
 #include "Vector.h"
 
-namespace jek
+namespace cml
 {
-	template <class T> struct _ALIGN(8) Complex
+	template <ASX::ID, class T> struct complex_t;
+
+	template <typename T> using complex = complex_t<ASX::ID_value, T>;
+
+	typedef complex<double>		dcomplex;
+	typedef complex<float>		fcomplex;
+	typedef complex<int32_t>	icomplex;
+	typedef complex<uint32_t>	ucomplex;
+
+	template <ASX::ID t_id, typename T>
+	struct _ALIGN(sizeof(T) * 2) complex_t
 	{
-		static_assert(sizeof(T) == 4, "Type must be 4 bytes");
 		static_assert(std::is_arithmetic<T>::value, "Type must be must be numeric");
 
-		T r{}, i{};
-		_HOST_DEVICE Complex() {};
-		template <class U>
-		_HOST_DEVICE Complex(U r, U i) : r(r), i(i) {};
-		template <class U>
-		_HOST_DEVICE Complex(U r) : r(r), i(0) {};
-		template <class U>
-		_HOST_DEVICE Complex(const Complex<U>& c) : r(c.r), i(c.i) {};
-		template <class U>
-		_HOST_DEVICE Complex(const Vec2<U>& c) : r(c.r), i(c.i) {};
+		typedef ASX::ASAGroup<T, t_id> ASX_ASA;
 
-		_HOST_DEVICE Complex(const float2& c) : r(c.r), i(c.i) {};
-		_HOST Complex(const glm::vec2& c) : r(c.r), i(c.i) {};
+		union { T r; ASX_ASA dummy1; };
+		union { T i; ASX_ASA dummy2; };
 
-		template <class U>
-		_HOST_DEVICE operator Vec2<U>() const
+		_HOST_DEVICE complex_t() {};
+
+		_HOST_DEVICE complex_t(U r, U i) : r(r), i(i) {};
+
+		_HOST_DEVICE complex_t(U r) : r(r), i(0) {};
+
+		template<ASX::ID u_id>
+		_HOST_DEVICE complex_t(const complex_t<u_id, T>&c) : r(c.r), i(c.i) {};
+
+		template<ASX::ID u_id>
+		_HOST_DEVICE complex_t(const vec2<u_id, T>&c) : r(c.r), i(c.i) {};
+
+		template<ASX::ID u_id, Numeric_Type(U)>
+		_HOST_DEVICE complex_t<t_id, T>& operator=(const complex_t<u_id, U>& other)
 		{
-			return Vec2<U>(r, i);
+			r = static_cast<T>(other.r); i = static_cast<T>(other.i);
+			return *this;
 		};
+
+		template<ASX::ID u_id, Numeric_Type(U)>
+		_HOST_DEVICE complex_t<t_id, T>& operator=(const vec2<u_id, U>& other)
+		{
+			r = static_cast<T>(other.x); i = static_cast<T>(other.y);
+			return *this;
+		};
+
+		template<ASX::ID u_id, Numeric_Type(U)>
+		_HOST_DEVICE operator complex_t<u_id, T>() const
+		{
+			return complex_t<ASX::ID_value, U>(r, i);
+		};
+
+		template<ASX::ID u_id, Numeric_Type(U)>
+		_HOST_DEVICE operator vec2<u_id, T>() const
+		{
+			return vec2<ASX::ID_value, U>(r, i);
+		};
+
+		_HOST_DEVICE complex_t(const float2& c) : r(c.r), i(c.i) {};
+
+		_HOST_DEVICE complex_t(const glm::vec2& c) : r(c.r), i(c.i) {};
+
 		_HOST_DEVICE operator float2() const
 		{
 			return make_float2(r, i);
 		};
-		_HOST operator glm::vec2() const
+
+		_HOST_DEVICE operator glm::vec2() const
 		{
 			return glm::vec2(r, i);
 		};
 
-		_HOST_DEVICE void polar_form(T& radius, T& theta)
+		template<Numeric_Type(U)>
+		_HOST_DEVICE void polar_form(U & radius, U & theta)
 		{
 			radius = modulus(this);
-			theta = ::arctan(i/r);
+			theta = ::arctan(i / r);
 		};
+
 		_HOST_DEVICE void print()
 		{
 			printf("%f + i%f\n", (float)r, (float)i);
 		};
 	};
 
-	typedef Complex<float>		Complexf;
-	typedef Complex<int32_t>	Complexi;
-	typedef Complex<uint32_t>	Complexu;
-
 	/* -------------------------------------------------------------------------- */
 	/*                                 Comparators                                */
 	/* -------------------------------------------------------------------------- */
 
-	template <class T, class U> _HOST_DEVICE
-		inline bool operator==(const Complex<T>& c1, const Complex<U>& c2)
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline bool operator==(const complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 	{
 		return (c1.r == c2.r && c1.i == c2.i)
 	}
-	template <class T, class U> _HOST_DEVICE
-		inline bool operator!=(const Complex<T>& c1, const Complex<U>& c2)
+
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline bool operator!=(const complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 	{
 		return (c1.r != c2.r || c1.i != c2.i)
 	}
@@ -74,42 +115,50 @@ namespace jek
 	/*                               Multiplication                               */
 	/* -------------------------------------------------------------------------- */
 
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*=(Complex<T>& c1, const Complex<U>& c2)
-		-> Complex<decltype(c1.r * c2.r)>
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline complex_t<t_id, T> operator*=(complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 	{
 		auto s1 = c1.r * c2.r;
 		auto s2 = c1.i * c2.i;
-		auto s3 = (c1.r + c1.i)*(c2.r + c2.i);
-		c1 = { s1-s2, s3-s1-s2 };
+		auto s3 = (c1.r + c1.i) * (c2.r + c2.i);
+
+		c1.r = s1 - s2; c1.i = s3 - s1 - s2;
+
 		return c1;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*=(Complex<T>& c, const U s)
-		-> Complex<decltype(c.r * s)>
+
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline auto operator*(const complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
+		-> complex_t<ASX::ID_value, decltype(c1.r * c2.r)>
 	{
-		c = { s * c.r, s * c.i };
-		return c;
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const Complex<T>& c1, const Complex<U>& c2)
-		-> Complex<decltype(c1.r * c2.r)>
-	{
-		auto temp(c1);
+		complex_t<ASX::ID_value, decltype(c1.r* c2.r)> temp(c1);
 		return temp *= c2;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const T s, const Complex<U>& c)
-		-> Complex<decltype(s * c.r)>
+
+	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline complex_t<t_id, T> operator*=(complex_t<t_id, T>& c, const U s)
 	{
-		auto temp(c);
+		c.r *= s; c.i *= s;
+		return c;
+	};
+
+	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	inline auto operator*(const U s, const complex_t<t_id, T>& c)
+		-> complex_t<ASX::ID_value, decltype(s * c.r)>
+	{
+		complex_t<ASX::ID_value, decltype(s* c.r)> temp(c);
 		return temp *= s;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator*(const Complex<T>& c, const U s)
-		-> Complex<decltype(c.r* s)>
+
+	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	inline auto operator*(const complex_t<t_id, T>& c, const U s)
+		-> complex_t<ASX::ID_value, decltype(s* c.r)>
 	{
-		auto temp(c);
+		complex_t<ASX::ID_value, decltype(s* c.r)> temp(c);
 		return temp *= s;
 	};
 
@@ -117,43 +166,51 @@ namespace jek
 	/*                                  Division                                  */
 	/* -------------------------------------------------------------------------- */
 
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/=(Complex<T>& c1, const Complex<U>& c2)
-		-> Complex<decltype(c1.r / c2.r)>
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline complex_t <t_id, T> operator/=(complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 	{
 		auto s1 = c1.r * c2.r;
 		auto s2 = c1.i * c2.i;
 		auto s3 = (c1.r - c1.i) * (c2.r + c2.i);
-		auto denom = c2.r*c2.r + c2.i*c2.i;
-		c1 = { (s1 + s2) / denom, (s3 - s1 + s2) / denom };
+		auto denom = c2.r * c2.r + c2.i * c2.i;
+
+		c1.r = (s1 + s2) / denom; c1.i = (s3 - s1 + s2) / denom;
+
 		return c1;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/=(Complex<T>& c, const U s)
-		-> Complex<decltype(c.r / s)>
+
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline auto operator/(const complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
+		-> complex_t<ASX::ID_value, decltype(c1.r / c2.r)>
 	{
-		c = { c.r / s, c.y / s };
-		return c;
-	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const Complex<T>& c1, const Complex<U>& c2)
-		-> Complex<decltype(c1.r / c2.r)>
-	{
-		auto temp(c1);
+		complex_t<ASX::ID_value, decltype(c1.r / c2.r)> temp(c1);
 		return temp /= c2;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const T s, const Complex<U>& c)
-		-> Complex<decltype(s / c.r)>
+
+	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	inline complex_t <t_id, T> operator/=(complex_t<t_id, T>& c, const U s)
 	{
-		Complex<decltype(s / c.r)>temp(s);
+		c.r = c.r / s; c.i = c.i / s;
+		return c;
+	};
+
+	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	inline auto operator/(const U s, const complex_t<t_id, T>& c)
+		-> complex_t<ASX::ID_value, decltype(s / c.r)>
+	{
+		complex_t<ASX::ID_value, decltype(s / c.r)>temp(s);
 		return temp /= c;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator/(const Complex<T>& c, const U s)
-		-> Complex<decltype(c.r / s)>
+
+	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+		inline auto operator/(const complex_t<t_id, T>& c, const U s)
+		-> complex_t<ASX::ID_value, decltype(c.r / s)>
 	{
-		auto temp(c);
+		complex_t<ASX::ID_value, decltype(s / c.r)>temp(s);
 		return temp /= s;
 	};
 
@@ -161,39 +218,45 @@ namespace jek
 	/*                                  Addition                                  */
 	/* -------------------------------------------------------------------------- */
 
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+=(Complex<T>& c1, const Complex<U>& c2)
-		-> Complex<decltype(c1.r + c2.r)>
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline complex_t<t_id, T> operator+=(complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 	{
-		c1 = { c1.r + c2.r, c1.i + c2.i };
+		c1.r = c1.r + c2.r; c1.i = c1.i + c2.i;
 		return c1;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+=(Complex<T>& c, const U s)
-		-> Complex<decltype(c.r + s)>
+
+	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	inline complex_t<t_id, T> operator+=(complex_t<t_id, T>& c, const U s)
 	{
-		c1.r += s; c1.i += s;
+		c.r += s; c.i += s;
 		return c;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+(const Complex<T>& c1, const Complex<U>& c2)
-		-> Complex<decltype(c1.r + c2.r)>
+
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline auto operator+(const complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
+		-> complex_t<ASX::ID_value, decltype(c1.r + c2.r)>
 	{
 		auto temp(c1);
 		return temp += c2;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+(const T s, const Complex<U>& c)
-		-> Complex<decltype(s + c.r)>
+
+	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	inline auto operator+(const U s, const complex_t<t_id, T>& c)
+		-> complex_t<ASX::ID_value, decltype(s + c.r)>
 	{
-		auto temp(c);
+		complex_t<ASX::ID_value, decltype(s + c.r)>temp(s);
 		return temp += s;
 	};
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator+(const Complex<T>& c, const U s)
-		-> Complex<decltype(c.r + s)>
+
+	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	inline auto operator+(const complex_t<t_id, T>& c, const U s)
+		-> complex_t<ASX::ID_value, decltype(c.r + s)>
 	{
-		auto temp(c);
+		complex_t<ASX::ID_value, decltype(s + c.r)>temp(s);
 		return temp += s;
 	};
 
@@ -201,86 +264,98 @@ namespace jek
 	/*                                 Subtraction                                */
 	/* -------------------------------------------------------------------------- */
 
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-=(Complex<T>& c1, const Complex<U>& c2)
-		-> Complex<decltype(c1.r - c2.r)>
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline complex_t<t_id, T> operator-=(complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 	{
-		c1 = { c1.r - c2.r, c1.i - c2.i };
+		c1.r = c1.r - c2.r; c1.i = c1.i - c2.i;
 		return c1;
-	}
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-=(Complex<T>& c, const U s)
-		-> Complex<decltype(c.r - s)>
+	};
+
+	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	inline complex_t<t_id, T> operator-=(complex_t<t_id, T>& c, const U s)
 	{
-		c = { c.r - s, c.i - s };
+		c.r -= s; c.i -= s;
 		return c;
-	}
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-(const Complex<T>& c1, const Complex<U>& c2)
-		-> Complex<decltype(c1.r - c2.r)>
+	};
+
+	template <
+		ASX::ID t_id, class T,
+		ASX::ID u_id, class U > _HOST_DEVICE
+	inline auto operator-(const complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
+		-> complex_t<ASX::ID_value, decltype(c1.r - c2.r)>
 	{
 		auto temp(c1);
 		return temp -= c2;
-	}
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-(const T s, const Complex<U>& c)
-		-> Complex<decltype(s - c.r)>
+	};
+
+	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	inline auto operator-(const U s, const complex_t<t_id, T>& c)
+		-> complex_t<ASX::ID_value, decltype(s - c.r)>
 	{
-		Complex<decltype(s - c.r)>temp(s);
-		return temp -= c;
-	}
-	template <class T, class U> _HOST_DEVICE
-		inline auto operator-(const Complex<T>& c, const U s)
-		-> Complex<decltype(c.r - s)>
-	{
-		auto temp(c);
+		complex_t<ASX::ID_value, decltype(s - c.r)>temp(s);
 		return temp -= s;
+	};
+
+	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	inline auto operator-(const complex_t<t_id, T>& c, const U s)
+		-> complex_t<ASX::ID_value, decltype(c.r - s)>
+	{
+		complex_t<ASX::ID_value, decltype(s - c.r)>temp(s);
+		return temp -= s;
+	};
+
+
+	template<ASX::ID t_id, class T> _HOST_DEVICE
+	inline complex_t<ASX::ID_value, T> floor(const complex_t<t_id, T>& c)
+	{
+		return complex_t<ASX::ID_value, T>(::floor(c.r), ::floor(c.i));
 	}
 
-	template<class T> _HOST_DEVICE
-		inline Complex<T> floor(const Complex<T>& c)
+	template<ASX::ID t_id, class T> _HOST_DEVICE
+	inline complex_t<ASX::ID_value, T> ceil(const complex_t<t_id, T>& c)
 	{
-		return Complex<T>(::floor(c.r), ::floor(c.i));
-	}
-	template<class T> _HOST_DEVICE
-		inline Complex<T> ceil(const Complex<T>& c)
-	{
-		return Complex<T>(::ceil(c.r), ::ceil(c.i));
-	}
-	template<class T> _HOST_DEVICE
-		inline Complex<T> abs(const Complex<T>& c)
-	{
-		return Complex<T>(::abs(c.r), ::abs(c.i));
-	}
-	template<class T> _HOST_DEVICE
-		inline Complex<T> clamp(const Complex<T>& c, const Complex<T>& min, const Complex<T>& max)
-	{
-		return Complex<T>(clamp(c.r, min.r, max.r), clamp(c.i, min.i, max.i));
-	}
-	template<class T> _HOST_DEVICE
-		inline Complex<T> clamp(const Complex<T>& c, const T min, const T max)
-	{
-		return Complex<T>(clamp(c.r, min, max), clamp(c.i, min, max));
+		return complex_t<ASX::ID_value, T>(::ceil(c.r), ::ceil(c.i));
 	}
 
-	template<class T, class U> _HOST_DEVICE
-		inline Complex<T> pow(const Complex<T>& c, const U p)
+	template<ASX::ID t_id, class T> _HOST_DEVICE
+	inline complex_t<ASX::ID_value, T> abs(const complex_t<t_id, T>& c)
+	{
+		return complex_t<ASX::ID_value, T>(::abs(c.r), ::abs(c.i));
+	}
+
+	template<ASX::ID t_id, class T> _HOST_DEVICE
+	inline complex_t<ASX::ID_value, T> clamp(const complex_t<t_id, T>& c, const complex_t<t_id, T>& min, const complex_t<t_id, T>& max)
+	{
+		return complex_t<ASX::ID_value, T>(clamp(c.r, min.r, max.r), clamp(c.i, min.i, max.i));
+	}
+
+	template<ASX::ID t_id, class T> _HOST_DEVICE
+	inline complex_t<ASX::ID_value, T> clamp(const complex_t<t_id, T>& c, const T min, const T max)
+	{
+		return complex_t<ASX::ID_value, T>(clamp(c.r, min, max), clamp(c.i, min, max));
+	}
+
+	template<ASX::ID t_id, class T, class U> _HOST_DEVICE
+	inline complex_t<ASX::ID_value, T> pow(const complex_t<t_id, T>& c, const U p)
 	{
 		auto rn = ::pow((U)modulus(c), p);
-		auto theta = ::atan((U)c.i/ (U)c.r);
-		return {static_cast<T>(rn*::cos(p*theta)), static_cast<T>(rn*::sin(p*theta))};
-	}
-	template <class T> _HOST_DEVICE
-		inline Complex<T> conjugate(const Complex<T>& c)
-	{
-		return {c.r, -c.i};
-	}
-	template <class T> _HOST_DEVICE
-		inline float modulus(const Complex<T>& c)
-	{
-		return ::sqrt(c.r*c.r + c.i*c.i);
+		auto theta = ::atan((U)c.i / (U)c.r);
+		return complex_t<ASX::ID_value, T>(static_cast<T>(rn * ::cos(p * theta)), static_cast<T>(rn * ::sin(p * theta)));
 	}
 
+	template<ASX::ID t_id, class T> _HOST_DEVICE
+	inline complex_t<ASX::ID_value, T> conjugate(const complex_t<t_id, T>& c)
+	{
+		return complex_t<ASX::ID_value, T>(c.r, -c.i);
+	}
+
+	template<ASX::ID t_id, class T> _HOST_DEVICE
+	inline float modulus(const complex_t<t_id, T>& c)
+	{
+		return ::sqrt(c.r * c.r + c.i * c.i);
+	}
 }
 
-#endif // _JEK_COMPLEX_
+#endif // _CML_COMPLEX_

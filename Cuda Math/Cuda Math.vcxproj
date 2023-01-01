@@ -95,11 +95,16 @@
     <CudaLink />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ASA.hpp" />
+    <ClInclude Include="asaTestVec.h" />
     <ClInclude Include="Complex.h" />
+    <ClInclude Include="Complex2.h" />
     <ClInclude Include="CudaCommon.h" />
     <ClInclude Include="GLCommon.h" />
     <ClInclude Include="dMath.h" />
+    <ClInclude Include="Matrix2.h" />
     <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="Quaternion2.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Sample.h" />
     <ClInclude Include="Vector.h" />

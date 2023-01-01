@@ -1,6 +1,6 @@
 #include "Random.h"
 
-namespace jek
+namespace cml
 {
 	uint32_t lowerbias32(uint32_t x)
 	{
@@ -21,7 +21,7 @@ namespace jek
 		uint32_t i = threadIdx.x + blockIdx.x * blockDim.x;
 		uint32_t j = threadIdx.y + blockIdx.y * blockDim.y;
 
-		uint32_t seed = (i * 256 + j) + clock();
+		uint32_t seed = (i * 256 + j);
 		return lowerbias32(seed);
 #else
 		return ::rand();

@@ -1,9 +1,11 @@
-#ifndef _JEK_MATH_
-#define _JEK_MATH_
+#ifndef _CML_MATH_
+#define _CML_MATH_
 
 #include "CudaCommon.h"
 
-namespace jek
+#define Numeric_Type(T) typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type
+
+namespace cml
 {
 	_CONSTANT float K_EPSILON	= 1e-6;
 	_CONSTANT float K_HUGE		= 1e32;
@@ -25,35 +27,35 @@ namespace jek
 	_CONSTANT float M_SQRT2		= 1.41421356237309504880168872420969808;	// The square root of two (sqrt(2))
 	_CONSTANT float M_SQRT1_2	= 0.70710678118654752440084436210484903;	// The reciprocal of the square root of two (1/sqrt(2))
 
-    template<class T> _HOST_DEVICE 
+    template<Numeric_Type(T)> _HOST_DEVICE
     inline T remap(const T h1, const T l1, const T h2, const T l2, const T v)
     {
         return l2 + (v - l1) * (h2 - l2) / (h1 - l1);
     }
 
-    template<class T> _HOST_DEVICE
+    template<Numeric_Type(T)> _HOST_DEVICE
     inline T frac(const T v)
     {
         return v - ::floor(v);
     }
 
-    template<class T> _HOST_DEVICE
+    template<Numeric_Type(T)> _HOST_DEVICE
     inline T clamp(const T f, const T a, const T b)
     {
         return ::fmax(a, ::fmin(f, b));
     }
 
-    template <class T> _HOST_DEVICE
+    template <Numeric_Type(T)> _HOST_DEVICE
     inline T mix(const T a, const T b, const T t)
     {
         return a * (1.f - t) + b * t;
     }
 
-    template<class T> _HOST_DEVICE 
+    template<Numeric_Type(T)> _HOST_DEVICE 
     T smooth_step(const T a, const T b, const T x)
     {
         T y = clamp((x - a) / (b - a), 0, 1);
         return (y * y * (T(3) - (T(2) * y)));
     }
 }
-#endif // _JEK_MATH_
+#endif // _CML_MATH_

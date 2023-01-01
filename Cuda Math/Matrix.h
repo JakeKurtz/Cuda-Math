@@ -1,9 +1,9 @@
-#ifndef _JEK_MATRIX_
-#define _JEK_MATRIX_
+#ifndef _CML_MATRIX_
+#define _CML_MATRIX_
 
 #include "Vector.h"
 
-namespace jek
+namespace cml
 {
     template <class T> struct Matrix4x4;
     template <class T> struct Matrix3x3;
@@ -58,11 +58,12 @@ namespace jek
             m[2][0] = t20; m[2][1] = t21; m[2][2] = t22; m[2][3] = t23;
             m[3][0] = t30; m[3][1] = t31; m[3][2] = t32; m[3][3] = t33;
         };
+        template <ASX::ID t_id>
         _HOST_DEVICE Matrix4x4(
-            const Vec4<T>&v0,
-            const Vec4<T>&v1,
-            const Vec4<T>&v2,
-            const Vec4<T>&v3)
+            const vec4_t<t_id, T>&v0,
+            const vec4_t<t_id, T>&v1,
+            const vec4_t<t_id, T>&v2,
+            const vec4_t<t_id, T>&v3)
         {
             m[0][0] = v0.x; m[0][1] = v0.y; m[0][2] = v0.z; m[0][3] = v0.w;
             m[1][0] = v1.x; m[1][1] = v1.y; m[1][2] = v1.z; m[1][3] = v1.w;
@@ -99,15 +100,20 @@ namespace jek
         T m[3][3];
 
         _HOST_DEVICE Matrix3x3();
+
         _HOST_DEVICE Matrix3x3(T x);
+
         _HOST_DEVICE Matrix3x3(
             T t00, T t01, T t02,
             T t10, T t11, T t12,
             T t20, T t21, T t22);
+
+        template<ASX::ID t_id>
         _HOST_DEVICE Matrix3x3(
-            const Vec3<T>&v0,
-            const Vec3<T>&v1,
-            const Vec3<T>&v2);
+            const vec3_t<t_id, T>&v0,
+            const vec3_t<t_id, T>&v1,
+            const vec3_t<t_id, T>&v2);
+
         _HOST Matrix3x3(const glm::mat3 & m);
 
         operator Matrix4x4<T>() const;
@@ -125,9 +131,11 @@ namespace jek
         _HOST_DEVICE Matrix2x2(
             T t00, T t01,
             T t10, T t11);
+
+        template<ASX::ID t_id>
         _HOST_DEVICE Matrix2x2(
-            const Vec2<T>&v0,
-            const Vec2<T>&v1);
+            const vec2_t<t_id, T>&v0,
+            const vec2_t<t_id, T>&v1);
         _HOST Matrix2x2(const glm::mat2 & m);
 
         _HOST_DEVICE void print();
@@ -181,47 +189,47 @@ namespace jek
         }
         return out;
     }
-    template<class T> _HOST_DEVICE
-    inline Vec4<T> operator*(const Vec4<T>& v, const Matrix4x4<T>& m)
+    template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+    inline vec4_t<t_id, T> operator*=(vec4_t<t_id, T>& v, const Matrix4x4<T>& m)
     {
-        Vec4<T> out;
-        out.x = m.m[0][0] * v.x + m.m[0][1] * v.y + m.m[0][2] * v.z + m.m[0][3] * v.w;
-        out.y = m.m[1][0] * v.x + m.m[1][1] * v.y + m.m[1][2] * v.z + m.m[1][3] * v.w;
-        out.z = m.m[2][0] * v.x + m.m[2][1] * v.y + m.m[2][2] * v.z + m.m[2][3] * v.w;
-        out.w = m.m[3][0] * v.x + m.m[3][1] * v.y + m.m[3][2] * v.z + m.m[3][3] * v.w;
-        return out;
+        vec4<T> tmp(v);
+        tmp.x = m.m[0][0] * v.x + m.m[0][1] * v.y + m.m[0][2] * v.z + m.m[0][3] * v.w;
+        tmp.y = m.m[1][0] * v.x + m.m[1][1] * v.y + m.m[1][2] * v.z + m.m[1][3] * v.w;
+        tmp.z = m.m[2][0] * v.x + m.m[2][1] * v.y + m.m[2][2] * v.z + m.m[2][3] * v.w;
+        tmp.w = m.m[3][0] * v.x + m.m[3][1] * v.y + m.m[3][2] * v.z + m.m[3][3] * v.w;
+
+        v.x = tmp.x; v.y = tmp.y; v.z = tmp.z; v.w = tmp.w;
+
+        return v;
     }
-    template<class T> _HOST_DEVICE
-    inline Vec4<T> operator*(const Matrix4x4<T>& m, const Vec4<T>& v)
+    template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+    inline auto operator*(const Matrix4x4<T>& m, const vec4_t<t_id, T>& v)
+        ->vec4<decltype(m.m[0][0] * v.x)>
     {
-        Vec4<T> out;
+        vec4<decltype(m.m[0][0] * v.x)> out;
         out.x = m.m[0][0] * v.x + m.m[1][0] * v.y + m.m[2][0] * v.z + m.m[3][0] * v.w;
         out.y = m.m[0][1] * v.x + m.m[1][1] * v.y + m.m[2][1] * v.z + m.m[3][1] * v.w;
         out.z = m.m[0][2] * v.x + m.m[1][2] * v.y + m.m[2][2] * v.z + m.m[3][2] * v.w;
         out.w = m.m[0][3] * v.x + m.m[1][3] * v.y + m.m[2][3] * v.z + m.m[3][3] * v.w;
         return out;
     }
-    template<class T> _HOST_DEVICE
-    inline Vec3<T> operator*(const Vec3<T>& v, const Matrix4x4<T>& m)
+    template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+    inline vec3_t<t_id, T> operator*=(vec3_t<t_id, T>& v, const Matrix4x4<T>& m)
     {
-        Vec4<T> out;
-        out.x = m.m[0][0] * v.x + m.m[0][1] * v.y + m.m[0][2] * v.z + m.m[0][3];
-        out.y = m.m[1][0] * v.x + m.m[1][1] * v.y + m.m[1][2] * v.z + m.m[1][3];
-        out.z = m.m[2][0] * v.x + m.m[2][1] * v.y + m.m[2][2] * v.z + m.m[2][3];
-        out.w = m.m[3][0] * v.x + m.m[3][1] * v.y + m.m[3][2] * v.z + m.m[3][3];
+        vec4<T> tmp(v, 1); tmp *= m;
 
-        return (out.w == 0.0) ? Vec3f(0) : 1.f / out.w * Vec3<T>(out.x, out.y, out.z);
+        auto out = (tmp.w == static_cast<T>(0)) ? vec3<T>(0) : 1.0 / tmp.w * vec3<T>(tmp.x, tmp.y, tmp.z);
+
+        v.x = out.x; v.y = out.y; v.z = out.z; v.z = out.z;
+
+        return v;
     }
-    template<class T> _HOST_DEVICE
-    inline Vec3<T> operator*(const Matrix4x4<T>& m, const Vec3<T>& v)
+    template <ASX::ID t_id, class T, class U> _HOST_DEVICE
+    inline auto operator*(const Matrix4x4<T>& m, const vec3_t<t_id, T>& v)
+        ->vec3<decltype(m.m[0][0] * v.x)>
     {
-        Vec4<T> out;
-        out.x = m.m[0][0] * v.x + m.m[1][0] * v.y + m.m[2][0] * v.z + m.m[3][0];
-        out.y = m.m[0][1] * v.x + m.m[1][1] * v.y + m.m[2][1] * v.z + m.m[3][1];
-        out.z = m.m[0][2] * v.x + m.m[1][2] * v.y + m.m[2][2] * v.z + m.m[3][2];
-        out.w = m.m[0][3] * v.x + m.m[1][3] * v.y + m.m[2][3] * v.z + m.m[3][3];
-
-        return (out.w == 0.0) ? Vec3f(0) : 1.f / out.w * Vec3<T>(out.x, out.y, out.z);
+        vec4<decltype(m.m[0][0] * v.x)> tmp(v, 1); tmp = m * tmp;
+        return (tmp.w == static_cast<T>(0)) ? vec3<decltype(m.m[0][0] * v.x)>(0) : 1.0 / tmp.w * vec3<decltype(m.m[0][0] * v.x)>(tmp.x, tmp.y, tmp.z);
     }
 
     template<class T> _HOST_DEVICE
@@ -460,11 +468,11 @@ namespace jek
     }
 
     template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> look_at(const Vec3f& eye, const Vec3f& look, const Vec3f& up)
+    inline Matrix4x4<T> look_at(const vec3f& eye, const vec3f& look, const vec3f& up)
     {
-        Vec3<T> d = normalize(look - eye);
-        Vec3<T> r = normalize(cross(d, up));
-        Vec3<T> u = cross(r, d);
+        vec3f d = normalize(look - eye);
+        vec3f r = normalize(cross(d, up));
+        vec3f u = cross(r, d);
 
         Matrix4x4<T> out;
 
@@ -521,11 +529,11 @@ namespace jek
     {
         dRay out;
 
-        Vec4f o = m * make_Vec4f(r.o.x, r.o.y, r.o.z, 1.f);
-        Vec4f d = m * make_Vec4f(r.d.x, r.d.y, r.d.z, 0.f);
+        vec4f o = m * make_vec4f(r.o.x, r.o.y, r.o.z, 1.f);
+        vec4f d = m * make_vec4f(r.d.x, r.d.y, r.d.z, 0.f);
 
-        out.o = make_Vec4f(o.x, o.y, o.z, 0.f);
-        out.d = make_Vec4f(d.x, d.y, d.z, 0.f);
+        out.o = make_vec4f(o.x, o.y, o.z, 0.f);
+        out.d = make_vec4f(d.x, d.y, d.z, 0.f);
 
         return out;
     }
@@ -533,11 +541,11 @@ namespace jek
     {
         dRay out;
 
-        Vec4f o = make_Vec4f(r.o.x, r.o.y, r.o.z, 1.f) * m;
-        Vec4f d = make_Vec4f(r.d.x, r.d.y, r.d.z, 0.f) * m;
+        vec4f o = make_vec4f(r.o.x, r.o.y, r.o.z, 1.f) * m;
+        vec4f d = make_vec4f(r.d.x, r.d.y, r.d.z, 0.f) * m;
 
-        out.o = make_Vec4f(o.x, o.y, o.z, 0.f);
-        out.d = make_Vec4f(d.x, d.y, d.z, 0.f);
+        out.o = make_vec4f(o.x, o.y, o.z, 0.f);
+        out.d = make_vec4f(d.x, d.y, d.z, 0.f);
 
         return out;
     }
@@ -554,4 +562,4 @@ namespace jek
     */
 }
 
-#endif // _JEK_MATRIX_
+#endif // _CML_MATRIX_

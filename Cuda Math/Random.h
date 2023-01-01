@@ -1,10 +1,10 @@
-#ifndef _JEK_RANDOM_
-#define _JEK_RANDOM_
+#ifndef _CML_RANDOM_
+#define _CML_RANDOM_
 
 #include "GLCommon.h"
 #include "CudaCommon.h"
 
-namespace jek
+namespace cml
 {
 	_HOST_DEVICE uint32_t lowerbias32(uint32_t x);
 	_HOST_DEVICE uint32_t rand();
@@ -16,4 +16,4 @@ namespace jek
 	_HOST_DEVICE int rand_int(int min, int max);
 }
 
-#endif // _JEK_RANDOM_
+#endif // _CML_RANDOM_
