@@ -28,15 +28,15 @@ namespace cml
 
 		_HOST_DEVICE complex_t() {};
 
-		_HOST_DEVICE complex_t(U r, U i) : r(r), i(i) {};
+		_HOST_DEVICE complex_t(T r, T i) : r(r), i(i) {};
 
-		_HOST_DEVICE complex_t(U r) : r(r), i(0) {};
+		_HOST_DEVICE complex_t(T r) : r(r), i(0) {};
 
 		template<ASX::ID u_id>
 		_HOST_DEVICE complex_t(const complex_t<u_id, T>&c) : r(c.r), i(c.i) {};
 
 		template<ASX::ID u_id>
-		_HOST_DEVICE complex_t(const vec2<u_id, T>&c) : r(c.r), i(c.i) {};
+		_HOST_DEVICE complex_t(const vec2_t<u_id, T>&c) : r(c.r), i(c.i) {};
 
 		template<ASX::ID u_id, Numeric_Type(U)>
 		_HOST_DEVICE complex_t<t_id, T>& operator=(const complex_t<u_id, U>& other)
@@ -46,7 +46,7 @@ namespace cml
 		};
 
 		template<ASX::ID u_id, Numeric_Type(U)>
-		_HOST_DEVICE complex_t<t_id, T>& operator=(const vec2<u_id, U>& other)
+		_HOST_DEVICE complex_t<t_id, T>& operator=(const vec2_t<u_id, U>& other)
 		{
 			r = static_cast<T>(other.x); i = static_cast<T>(other.y);
 			return *this;
@@ -59,7 +59,7 @@ namespace cml
 		};
 
 		template<ASX::ID u_id, Numeric_Type(U)>
-		_HOST_DEVICE operator vec2<u_id, T>() const
+		_HOST_DEVICE operator vec2_t<u_id, T>() const
 		{
 			return vec2<ASX::ID_value, U>(r, i);
 		};

@@ -38,16 +38,16 @@ namespace cml
 		_HOST_DEVICE quat_t(const quat_t<u_id, T>&q) : a(q.a), i(q.i), j(q.j), k(q.k) {};
 
 		template<ASX::ID u_id>
-		_HOST_DEVICE quat_t(T a, const vec3<u_id, T>&q) : a(a), i(q.i), j(q.j), k(q.k) {};
+		_HOST_DEVICE quat_t(T a, const vec3_t<u_id, T>&q) : a(a), i(q.i), j(q.j), k(q.k) {};
 
 		_HOST_DEVICE quat_t(const float4 & q) : a(q.a), i(q.i), j(q.j), k(q.k) {};
 
-		_HOST quat_t(const glm::quat_t& q) : a(q.w), i(q.x), j(q.y), k(q.z) {};
+		_HOST quat_t(const glm::quat& q) : a(q.w), i(q.x), j(q.y), k(q.z) {};
 
 		template <ASX::ID u_id, class U>
 		_HOST_DEVICE operator quat_t<u_id, U>() const
 		{
-			return quat_t<U>(a, i, j, k);
+			return quat<U>(a, i, j, k);
 		};
 
 		_HOST_DEVICE operator float4() const
@@ -57,7 +57,7 @@ namespace cml
 
 		_HOST_DEVICE operator glm::quat_t() const
 		{
-			return glm::quat_t(a, i, j, k);
+			return glm::quat(a, i, j, k);
 		};
 
 		_HOST_DEVICE void print()
@@ -90,13 +90,13 @@ namespace cml
 		}
 
 		template <ASX::ID u_id>
-		_HOST_DEVICE void angle_axis(T & angle, vec3<u_id, T>&axis)
+		_HOST_DEVICE void angle_axis(T & angle, vec3_t<u_id, T>&axis)
 		{
-			if (vec3<ASX::ID_value, T>(i, j, k) == vec3<ASX::ID_value, T>(0.0)) {
-				axis = vec3<ASX::ID_value, T>(1, 0, 0);
+			if (vec3<T>(i, j, k) == vec3<T>(0.0)) {
+				axis = vec3<T>(1, 0, 0);
 			}
 			else {
-				axis = normalize(vec3<ASX::ID_value, T>(i, j, k));
+				axis = normalize(vec3<T>(i, j, k));
 			}
 			angle = 2.0 * ::atan2(::sqrt(i * i + j * j + k * k), a);
 		}

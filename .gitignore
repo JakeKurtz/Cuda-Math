@@ -370,3 +370,5 @@ FodyWeavers.xsd
 /Vector Test/Matrix Test.cpp
 /Vector Test/Complex Test.cpp
 /Cuda Math/Matrix2.h
+/Vector Test/pch.cpp
+/Vector Test/pch.h
