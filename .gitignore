@@ -369,3 +369,4 @@ FodyWeavers.xsd
 /Vector Test/Quaternion Test.cpp
 /Vector Test/Matrix Test.cpp
 /Vector Test/Complex Test.cpp
+/Cuda Math/Matrix2.h
