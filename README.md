@@ -24,10 +24,21 @@ And regardless of the layout specified, objects always act as if they were struc
     C[i] += cml::dot(A[i], B[i]);
   }
   ```
+  
+  ```C++
+  for (int i = 0; i < 1000; i++) {
+    cml::vec3f a = A[i];
+    cml::vec3f b = B[i];        
+    
+    cml::vec3f v = cml::normalize(cml::cross(a, b));
+    
+    C[i] = v;
+  }
+  ```
 
-The intent of this library is to make my own life easier while playing around with CUDA and OpenGL. I hope others who stumble across this will also find it useful.
+The original intent of this library was to make my own life easier when using CUDA. It's also been a lot of fun messing around with C++ templates. I hope others who happen to stumble across this will also find it as useful.
 
-A lot of what you see here was inspired/taken from tools that already exist, such as the popular [glm library](https://github.com/g-truc/glm) and from the fantastic book [Physically Based Rendering: From Theory To Implementation by Matt Pharr, Wenzel Jakob, and Greg Humphreys](https://www.pbr-book.org/).
+A lot of what you see here was inspired/taken from tools that already exist, such as the popular [glm library](https://github.com/g-truc/glm) and from the fantastic book [Physically Based Rendering: From Theory To Implementation](https://www.pbr-book.org/).
 
 Please feel free to open an issue or pull request if you have any suggestions or find any bugs.
 
