@@ -26,66 +26,66 @@ namespace cml
 		union { T r; ASX_ASA dummy1; };
 		union { T i; ASX_ASA dummy2; };
 
-		_HOST_DEVICE complex_t() {};
+		CLM_FUNC_DECL CLM_CONSTEXPR complex_t() {};
 
-		_HOST_DEVICE complex_t(T r, T i) : r(r), i(i) {};
+		CLM_FUNC_DECL CLM_CONSTEXPR complex_t(T r, T i) : r(r), i(i) {};
 
-		_HOST_DEVICE complex_t(T r) : r(r), i(0) {};
-
-		template<ASX::ID u_id>
-		_HOST_DEVICE complex_t(const complex_t<u_id, T>&c) : r(c.r), i(c.i) {};
+		CLM_FUNC_DECL CLM_CONSTEXPR complex_t(T r) : r(r), i(0) {};
 
 		template<ASX::ID u_id>
-		_HOST_DEVICE complex_t(const vec2_t<u_id, T>&c) : r(c.r), i(c.i) {};
+		CLM_FUNC_DECL CLM_CONSTEXPR complex_t(const complex_t<u_id, T>&c) : r(c.r), i(c.i) {};
+
+		template<ASX::ID u_id>
+		CLM_FUNC_DECL CLM_CONSTEXPR complex_t(const vec2_t<u_id, T>&c) : r(c.r), i(c.i) {};
 
 		template<ASX::ID u_id, Numeric_Type(U)>
-		_HOST_DEVICE complex_t<t_id, T>& operator=(const complex_t<u_id, U>& other)
+		CLM_FUNC_DECL CLM_CONSTEXPR complex_t<t_id, T>& operator=(const complex_t<u_id, U>& other)
 		{
 			r = static_cast<T>(other.r); i = static_cast<T>(other.i);
 			return *this;
 		};
 
 		template<ASX::ID u_id, Numeric_Type(U)>
-		_HOST_DEVICE complex_t<t_id, T>& operator=(const vec2_t<u_id, U>& other)
+		CLM_FUNC_DECL CLM_CONSTEXPR complex_t<t_id, T>& operator=(const vec2_t<u_id, U>& other)
 		{
 			r = static_cast<T>(other.x); i = static_cast<T>(other.y);
 			return *this;
 		};
 
 		template<ASX::ID u_id, Numeric_Type(U)>
-		_HOST_DEVICE operator complex_t<u_id, T>() const
+		CLM_FUNC_DECL CLM_CONSTEXPR operator complex_t<u_id, T>() const
 		{
 			return complex_t<ASX::ID_value, U>(r, i);
 		};
 
 		template<ASX::ID u_id, Numeric_Type(U)>
-		_HOST_DEVICE operator vec2_t<u_id, T>() const
+		CLM_FUNC_DECL CLM_CONSTEXPR operator vec2_t<u_id, T>() const
 		{
 			return vec2<ASX::ID_value, U>(r, i);
 		};
 
-		_HOST_DEVICE complex_t(const float2& c) : r(c.r), i(c.i) {};
+		CLM_FUNC_DECL CLM_CONSTEXPR complex_t(const float2& c) : r(c.r), i(c.i) {};
 
-		_HOST_DEVICE complex_t(const glm::vec2& c) : r(c.r), i(c.i) {};
+		CLM_FUNC_DECL CLM_CONSTEXPR complex_t(const glm::vec2& c) : r(c.r), i(c.i) {};
 
-		_HOST_DEVICE operator float2() const
+		CLM_FUNC_DECL CLM_CONSTEXPR operator float2() const
 		{
 			return make_float2(r, i);
 		};
 
-		_HOST_DEVICE operator glm::vec2() const
+		CLM_FUNC_DECL CLM_CONSTEXPR operator glm::vec2() const
 		{
 			return glm::vec2(r, i);
 		};
 
 		template<Numeric_Type(U)>
-		_HOST_DEVICE void polar_form(U & radius, U & theta)
+		CLM_FUNC_DECL CLM_CONSTEXPR void polar_form(U & radius, U & theta)
 		{
 			radius = modulus(this);
 			theta = ::arctan(i / r);
 		};
 
-		_HOST_DEVICE void print()
+		CLM_FUNC_DECL CLM_CONSTEXPR void print()
 		{
 			printf("%f + i%f\n", (float)r, (float)i);
 		};
@@ -97,7 +97,7 @@ namespace cml
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > _HOST_DEVICE
+		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline bool operator==(const complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 	{
 		return (c1.r == c2.r && c1.i == c2.i)
@@ -105,7 +105,7 @@ namespace cml
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > _HOST_DEVICE
+		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline bool operator!=(const complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 	{
 		return (c1.r != c2.r || c1.i != c2.i)
@@ -117,8 +117,8 @@ namespace cml
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > _HOST_DEVICE
-	inline complex_t<t_id, T> operator*=(complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
+		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
+	inline complex_t<t_id, T>& operator*=(complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 	{
 		auto s1 = c1.r * c2.r;
 		auto s2 = c1.i * c2.i;
@@ -131,7 +131,7 @@ namespace cml
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > _HOST_DEVICE
+		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline auto operator*(const complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 		-> complex_t<ASX::ID_value, decltype(c1.r * c2.r)>
 	{
@@ -139,14 +139,14 @@ namespace cml
 		return temp *= c2;
 	};
 
-	template <ASX::ID t_id, class T, class U> _HOST_DEVICE
-	inline complex_t<t_id, T> operator*=(complex_t<t_id, T>& c, const U s)
+	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
+	inline complex_t<t_id, T>& operator*=(complex_t<t_id, T>& c, const U s)
 	{
 		c.r *= s; c.i *= s;
 		return c;
 	};
 
-	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	template <ASX::ID t_id, class T, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline auto operator*(const U s, const complex_t<t_id, T>& c)
 		-> complex_t<ASX::ID_value, decltype(s * c.r)>
 	{
@@ -154,7 +154,7 @@ namespace cml
 		return temp *= s;
 	};
 
-	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	template <ASX::ID t_id, class T, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline auto operator*(const complex_t<t_id, T>& c, const U s)
 		-> complex_t<ASX::ID_value, decltype(s* c.r)>
 	{
@@ -168,8 +168,8 @@ namespace cml
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > _HOST_DEVICE
-	inline complex_t <t_id, T> operator/=(complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
+		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
+	inline complex_t <t_id, T>& operator/=(complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 	{
 		auto s1 = c1.r * c2.r;
 		auto s2 = c1.i * c2.i;
@@ -183,7 +183,7 @@ namespace cml
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > _HOST_DEVICE
+		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline auto operator/(const complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 		-> complex_t<ASX::ID_value, decltype(c1.r / c2.r)>
 	{
@@ -191,14 +191,14 @@ namespace cml
 		return temp /= c2;
 	};
 
-	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
-	inline complex_t <t_id, T> operator/=(complex_t<t_id, T>& c, const U s)
+	template <ASX::ID t_id, class T, class U > CLM_FUNC_DECL CLM_CONSTEXPR
+	inline complex_t <t_id, T>& operator/=(complex_t<t_id, T>& c, const U s)
 	{
 		c.r = c.r / s; c.i = c.i / s;
 		return c;
 	};
 
-	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	template <ASX::ID t_id, class T, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline auto operator/(const U s, const complex_t<t_id, T>& c)
 		-> complex_t<ASX::ID_value, decltype(s / c.r)>
 	{
@@ -206,7 +206,7 @@ namespace cml
 		return temp /= c;
 	};
 
-	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	template <ASX::ID t_id, class T, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 		inline auto operator/(const complex_t<t_id, T>& c, const U s)
 		-> complex_t<ASX::ID_value, decltype(c.r / s)>
 	{
@@ -220,15 +220,15 @@ namespace cml
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > _HOST_DEVICE
-	inline complex_t<t_id, T> operator+=(complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
+		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
+	inline complex_t<t_id, T>& operator+=(complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 	{
 		c1.r = c1.r + c2.r; c1.i = c1.i + c2.i;
 		return c1;
 	};
 
-	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
-	inline complex_t<t_id, T> operator+=(complex_t<t_id, T>& c, const U s)
+	template <ASX::ID t_id, class T, class U > CLM_FUNC_DECL CLM_CONSTEXPR
+	inline complex_t<t_id, T>& operator+=(complex_t<t_id, T>& c, const U s)
 	{
 		c.r += s; c.i += s;
 		return c;
@@ -236,7 +236,7 @@ namespace cml
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > _HOST_DEVICE
+		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline auto operator+(const complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 		-> complex_t<ASX::ID_value, decltype(c1.r + c2.r)>
 	{
@@ -244,7 +244,7 @@ namespace cml
 		return temp += c2;
 	};
 
-	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	template <ASX::ID t_id, class T, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline auto operator+(const U s, const complex_t<t_id, T>& c)
 		-> complex_t<ASX::ID_value, decltype(s + c.r)>
 	{
@@ -252,7 +252,7 @@ namespace cml
 		return temp += s;
 	};
 
-	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	template <ASX::ID t_id, class T, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline auto operator+(const complex_t<t_id, T>& c, const U s)
 		-> complex_t<ASX::ID_value, decltype(c.r + s)>
 	{
@@ -266,15 +266,15 @@ namespace cml
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > _HOST_DEVICE
-	inline complex_t<t_id, T> operator-=(complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
+		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
+	inline complex_t<t_id, T>& operator-=(complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 	{
 		c1.r = c1.r - c2.r; c1.i = c1.i - c2.i;
 		return c1;
 	};
 
-	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
-	inline complex_t<t_id, T> operator-=(complex_t<t_id, T>& c, const U s)
+	template <ASX::ID t_id, class T, class U > CLM_FUNC_DECL CLM_CONSTEXPR
+	inline complex_t<t_id, T>& operator-=(complex_t<t_id, T>& c, const U s)
 	{
 		c.r -= s; c.i -= s;
 		return c;
@@ -282,7 +282,7 @@ namespace cml
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > _HOST_DEVICE
+		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline auto operator-(const complex_t<t_id, T>& c1, const complex_t<u_id, U>& c2)
 		-> complex_t<ASX::ID_value, decltype(c1.r - c2.r)>
 	{
@@ -290,7 +290,7 @@ namespace cml
 		return temp -= c2;
 	};
 
-	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	template <ASX::ID t_id, class T, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline auto operator-(const U s, const complex_t<t_id, T>& c)
 		-> complex_t<ASX::ID_value, decltype(s - c.r)>
 	{
@@ -298,7 +298,7 @@ namespace cml
 		return temp -= s;
 	};
 
-	template <ASX::ID t_id, class T, class U > _HOST_DEVICE
+	template <ASX::ID t_id, class T, class U > CLM_FUNC_DECL CLM_CONSTEXPR
 	inline auto operator-(const complex_t<t_id, T>& c, const U s)
 		-> complex_t<ASX::ID_value, decltype(c.r - s)>
 	{
@@ -307,51 +307,51 @@ namespace cml
 	};
 
 
-	template<ASX::ID t_id, class T> _HOST_DEVICE
+	template<ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	inline complex_t<ASX::ID_value, T> floor(const complex_t<t_id, T>& c)
 	{
 		return complex_t<ASX::ID_value, T>(::floor(c.r), ::floor(c.i));
 	}
 
-	template<ASX::ID t_id, class T> _HOST_DEVICE
+	template<ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	inline complex_t<ASX::ID_value, T> ceil(const complex_t<t_id, T>& c)
 	{
 		return complex_t<ASX::ID_value, T>(::ceil(c.r), ::ceil(c.i));
 	}
 
-	template<ASX::ID t_id, class T> _HOST_DEVICE
+	template<ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	inline complex_t<ASX::ID_value, T> abs(const complex_t<t_id, T>& c)
 	{
 		return complex_t<ASX::ID_value, T>(::abs(c.r), ::abs(c.i));
 	}
 
-	template<ASX::ID t_id, class T> _HOST_DEVICE
+	template<ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	inline complex_t<ASX::ID_value, T> clamp(const complex_t<t_id, T>& c, const complex_t<t_id, T>& min, const complex_t<t_id, T>& max)
 	{
 		return complex_t<ASX::ID_value, T>(clamp(c.r, min.r, max.r), clamp(c.i, min.i, max.i));
 	}
 
-	template<ASX::ID t_id, class T> _HOST_DEVICE
+	template<ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	inline complex_t<ASX::ID_value, T> clamp(const complex_t<t_id, T>& c, const T min, const T max)
 	{
 		return complex_t<ASX::ID_value, T>(clamp(c.r, min, max), clamp(c.i, min, max));
 	}
 
-	template<ASX::ID t_id, class T, class U> _HOST_DEVICE
-	inline complex_t<ASX::ID_value, T> pow(const complex_t<t_id, T>& c, const U p)
+	template<ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
+	inline complex_t<ASX::ID_value, T> pow(const complex_t<t_id, T>& c, const T p)
 	{
-		auto rn = ::pow((U)modulus(c), p);
-		auto theta = ::atan((U)c.i / (U)c.r);
+		auto rn = ::pow(static_cast<T>(T)modulus(c), p);
+		auto theta = ::atan(static_cast<T>(T)c.i / static_cast<T>(T)c.r);
 		return complex_t<ASX::ID_value, T>(static_cast<T>(rn * ::cos(p * theta)), static_cast<T>(rn * ::sin(p * theta)));
 	}
 
-	template<ASX::ID t_id, class T> _HOST_DEVICE
+	template<ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	inline complex_t<ASX::ID_value, T> conjugate(const complex_t<t_id, T>& c)
 	{
 		return complex_t<ASX::ID_value, T>(c.r, -c.i);
 	}
 
-	template<ASX::ID t_id, class T> _HOST_DEVICE
+	template<ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	inline float modulus(const complex_t<t_id, T>& c)
 	{
 		return ::sqrt(c.r * c.r + c.i * c.i);

@@ -1,5 +1,5 @@
 #include "Sample.h"
-#include "dMath.h"
+#include "Numeric.h"
 
 namespace cml
 {
@@ -21,7 +21,7 @@ namespace cml
 
 		float z = u.x;
 		float r = ::sqrt(::fmax(0.f, 1.f - z * z));
-		float phi = 2 * M_PI * u.y;
+		float phi = M_2PI * u.y;
 		return vec3f(r * ::cos(phi), r * ::sin(phi), z);
 	}
 
@@ -29,7 +29,7 @@ namespace cml
 	{
 		float z = 1.f - 2.f * u.x;
 		float r = ::sqrt(::fmax(0.f, 1.f - z * z));
-		float phi = 2.f * M_PI * u.y;
+		float phi = M_2PI * u.y;
 		return vec3f(r * ::cos(phi), r * ::sin(phi), z);
 	}
 	vec3f uniform_sample_sphere()
@@ -38,14 +38,14 @@ namespace cml
 
 		float z = 1.f - 2.f * u.x;
 		float r = ::sqrtf(::fmax(0.f, 1.f - z * z));
-		float phi = 2.f * M_PI * u.y;
+		float phi = M_2PI * u.y;
 		return vec3f(r * ::cos(phi), r * ::sin(phi), z);
 	}
 
 	vec2f uniform_sample_disk(const vec2f& u)
 	{
 		float r = ::sqrt(u.x);
-		float theta = 2.f * M_PI * u.y;
+		float theta = M_2PI * u.y;
 		return vec2f(r * ::cos(theta), r * ::sin(theta));
 	}
 	vec2f uniform_sample_disk()
@@ -53,7 +53,7 @@ namespace cml
 		vec2f u = vec2f(rand_float(), rand_float());
 
 		float r = ::sqrt(u.x);
-		float theta = 2.f * M_PI * u.y;
+		float theta = M_2PI * u.y;
 		return vec2f(r * ::cos(theta), r * ::sin(theta));
 	}
 

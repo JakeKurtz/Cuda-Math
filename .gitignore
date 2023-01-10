@@ -365,10 +365,7 @@ FodyWeavers.xsd
 /Cuda Speed Tests/kernel.cu
 /Vector Test/Vector Test.vcxproj.filters
 /Vector Test/Vector Test.vcxproj
-/Vector Test/Vector Test.cpp
 /Vector Test/Quaternion Test.cpp
 /Vector Test/Matrix Test.cpp
 /Vector Test/Complex Test.cpp
 /Cuda Math/Matrix2.h
-/Vector Test/pch.cpp
-/Vector Test/pch.h

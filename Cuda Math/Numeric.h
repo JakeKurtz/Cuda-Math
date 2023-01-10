@@ -3,8 +3,6 @@
 
 #include "CudaCommon.h"
 
-#define Numeric_Type(T) typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type
-
 namespace cml
 {
 	_CONSTANT float K_EPSILON	= 1e-6;
@@ -27,35 +25,47 @@ namespace cml
 	_CONSTANT float M_SQRT2		= 1.41421356237309504880168872420969808;	// The square root of two (sqrt(2))
 	_CONSTANT float M_SQRT1_2	= 0.70710678118654752440084436210484903;	// The reciprocal of the square root of two (1/sqrt(2))
 
-    template<Numeric_Type(T)> _HOST_DEVICE
-    inline T remap(const T h1, const T l1, const T h2, const T l2, const T v)
+    template<Numeric_Type(T)>
+    GLM_FUNC_DECL GLM_CONSTEXPR const T& min(const T& a, const T& b)
+    {
+        return (b < a) ? b : a;
+    }
+
+    template<Numeric_Type(T)>
+    GLM_FUNC_DECL GLM_CONSTEXPR const T& max(const T& a, const T& b)
+    {
+        return (b > a) ? b : a;
+    }
+
+    template<Numeric_Type(T)> 
+    CLM_FUNC_DECL CLM_CONSTEXPR T remap(const T h1, const T l1, const T h2, const T l2, const T v)
     {
         return l2 + (v - l1) * (h2 - l2) / (h1 - l1);
     }
 
-    template<Numeric_Type(T)> _HOST_DEVICE
-    inline T frac(const T v)
+    template<Numeric_Type(T)> 
+    CLM_FUNC_DECL CLM_CONSTEXPR T frac(const T v)
     {
         return v - ::floor(v);
     }
 
-    template<Numeric_Type(T)> _HOST_DEVICE
-    inline T clamp(const T f, const T a, const T b)
+    template<Numeric_Type(T)> 
+    CLM_FUNC_DECL CLM_CONSTEXPR T clamp(const T f, const T a, const T b)
     {
-        return ::fmax(a, ::fmin(f, b));
+        return max(a, min(f, b));
     }
 
-    template <Numeric_Type(T)> _HOST_DEVICE
-    inline T mix(const T a, const T b, const T t)
+    template <Numeric_Type(T)> 
+    CLM_FUNC_DECL CLM_CONSTEXPR T mix(const T a, const T b, const T t)
     {
-        return a * (1.f - t) + b * t;
+        return a * (static_cast<T>(1) - t) + b * t;
     }
 
-    template<Numeric_Type(T)> _HOST_DEVICE 
-    T smooth_step(const T a, const T b, const T x)
+    template<Numeric_Type(T)> 
+    CLM_FUNC_DECL CLM_CONSTEXPR T smooth_step(const T a, const T b, const T x)
     {
         T y = clamp((x - a) / (b - a), 0, 1);
-        return (y * y * (T(3) - (T(2) * y)));
+        return (y * y * (static_cast<T>(3) - (static_cast<T>(2) * y)));
     }
 }
 #endif // _CML_MATH_

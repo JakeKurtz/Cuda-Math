@@ -4,11 +4,9 @@
 #include "CudaCommon.h"
 #include "GLCommon.h"
 #include "Random.h"
-#include "dMath.h"
+#include "Numeric.h"
 
 #include "ASA.hpp"
-
-#define Numeric_Type(T) typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type
 
 namespace cml
 {
@@ -562,7 +560,7 @@ namespace cml
 	template <
 		ASX::ID t_id, class T,
 		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR 
-	vec4_t<t_id, T> operator*=(vec4_t<t_id, T>& v1, const vec4_t<u_id, U>& v2)
+	vec4_t<t_id, T>& operator*=(vec4_t<t_id, T>& v1, const vec4_t<u_id, U>& v2)
 	{
 		v1.x *= v2.x; v1.y *= v2.y; v1.z *= v2.z; v1.w *= v2.w;
 		return v1;
@@ -574,12 +572,12 @@ namespace cml
 	auto operator*(const vec4_t<t_id, T>& v1, const vec4_t<u_id, U>& v2)
 		-> vec4_t<ASX::ID_value, decltype(v1.x* v2.x)>
 	{
-		vec4_t<ASX::ID_value, decltype(v1.x* v2.x)> temp(v1);
-		return temp *= v2;
+		vec4_t<ASX::ID_value, decltype(v1.x* v2.x)> tmp(v1);
+		return tmp *= v2;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR  
-	vec4_t<t_id, T> operator*=(vec4_t<t_id, T>& v, const U s)
+	vec4_t<t_id, T>& operator*=(vec4_t<t_id, T>& v, const U s)
 	{
 		v.x *= s; v.y *= s; v.z *= s; v.w *= s;
 		return v;
@@ -589,16 +587,16 @@ namespace cml
 	auto operator*(const T s, const vec4_t<t_id, U>& v)
 		-> vec4_t<ASX::ID_value, decltype(s * v.x)>
 	{
-		vec4_t<ASX::ID_value, decltype(s* v.x)> temp(v);
-		return temp *= s;
+		vec4_t<ASX::ID_value, decltype(s* v.x)> tmp(v);
+		return tmp *= s;
 	};
 	
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR 
 	auto operator*(const vec4_t<t_id, T>& v, const U s)
 		-> vec4_t<ASX::ID_value, decltype(s * v.x)>
 	{
-		vec4_t<ASX::ID_value, decltype(s * v.x)> temp(v);
-		return temp *= s;
+		vec4_t<ASX::ID_value, decltype(s * v.x)> tmp(v);
+		return tmp *= s;
 	};
 	
 
@@ -617,8 +615,8 @@ namespace cml
 	auto operator*(const vec3_t<t_id, T>& v1, const vec3_t<u_id, U>& v2)
 		-> vec3_t<ASX::ID_value, decltype(v1.x * v2.x)>
 	{
-		vec3_t<ASX::ID_value, decltype(v1.x* v2.x)> temp(v1);
-		return temp *= v2;
+		vec3_t<ASX::ID_value, decltype(v1.x* v2.x)> tmp(v1);
+		return tmp *= v2;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
@@ -632,16 +630,16 @@ namespace cml
 	auto operator*(const T s, const vec3_t<t_id, U>& v)
 		-> vec3_t<ASX::ID_value, decltype(s * v.x)>
 	{
-		vec3_t<ASX::ID_value, decltype(s * v.x)> temp(v);
-		return temp *= s;
+		vec3_t<ASX::ID_value, decltype(s * v.x)> tmp(v);
+		return tmp *= s;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
 	auto operator*(const vec3_t<t_id, T>& v, const U s)
 		-> vec3_t<ASX::ID_value, decltype(s * v.x)>
 	{
-		vec3_t<ASX::ID_value, decltype(s * v.x)> temp(v);
-		return temp *= s;
+		vec3_t<ASX::ID_value, decltype(s * v.x)> tmp(v);
+		return tmp *= s;
 	};
 
 
@@ -660,8 +658,8 @@ namespace cml
 	auto operator*(const vec2_t<t_id, T>& v1, const vec2_t<u_id, U>& v2)
 		-> vec2_t<ASX::ID_value, decltype(v1.x* v2.x)>
 	{
-		vec2_t<ASX::ID_value, decltype(v1.x* v2.x)> temp(v1);
-		return temp *= v2;
+		vec2_t<ASX::ID_value, decltype(v1.x* v2.x)> tmp(v1);
+		return tmp *= v2;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
@@ -675,16 +673,16 @@ namespace cml
 	auto operator*(const T s, const vec2_t<t_id, U>& v)
 		-> vec2_t<ASX::ID_value, decltype(s* v.x)>
 	{
-		vec2_t<ASX::ID_value, decltype(s* v.x)> temp(v);
-		return temp *= s;
+		vec2_t<ASX::ID_value, decltype(s* v.x)> tmp(v);
+		return tmp *= s;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
 	auto operator*(const vec2_t<t_id, T>& v, const U s)
 		-> vec2_t<ASX::ID_value, decltype(s* v.x)>
 	{
-		vec2_t<ASX::ID_value, decltype(s* v.x)> temp(v);
-		return temp *= s;
+		vec2_t<ASX::ID_value, decltype(s* v.x)> tmp(v);
+		return tmp *= s;
 	};
 
 	/* -------------------------------------------------------------------------- */
@@ -706,8 +704,8 @@ namespace cml
 	auto operator/(const vec4_t<t_id, T>& v1, const vec4_t<u_id, U>& v2)
 		-> vec4_t<ASX::ID_value, decltype(v1.x/ v2.x)>
 	{
-		vec4_t<ASX::ID_value, decltype(v1.x/ v2.x)> temp(v1);
-		return temp /= v2;
+		vec4_t<ASX::ID_value, decltype(v1.x/ v2.x)> tmp(v1);
+		return tmp /= v2;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR  
@@ -721,16 +719,17 @@ namespace cml
 	auto operator/(const T s, const vec4_t<t_id, U>& v)
 		-> vec4_t<ASX::ID_value, decltype(s / v.x)>
 	{
-		vec4_t<ASX::ID_value, decltype(s/ v.x)> temp(v);
-		return temp /= s;
+		vec4_t<ASX::ID_value, decltype(s / v.x)> tmp_v(v);
+		vec4_t<ASX::ID_value, decltype(s / v.x)> tmp_s(s);
+		return tmp_s /= tmp_v;
 	};
 	
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR 
 	auto operator/(const vec4_t<t_id, T>& v, const U s)
 		-> vec4_t<ASX::ID_value, decltype(s / v.x)>
 	{
-		vec4_t<ASX::ID_value, decltype(s / v.x)> temp(v);
-		return temp /= s;
+		vec4_t<ASX::ID_value, decltype(s / v.x)> tmp(v);
+		return tmp /= s;
 	};
 
 
@@ -749,8 +748,8 @@ namespace cml
 	auto operator/(const vec3_t<t_id, T>& v1, const vec3_t<u_id, U>& v2)
 		-> vec3_t<ASX::ID_value, decltype(v1.x/ v2.x)>
 	{
-		vec3_t<ASX::ID_value, decltype(v1.x/ v2.x)> temp(v1);
-		return temp /= v2;
+		vec3_t<ASX::ID_value, decltype(v1.x/ v2.x)> tmp(v1);
+		return tmp /= v2;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR  
@@ -764,16 +763,17 @@ namespace cml
 	auto operator/(const T s, const vec3_t<t_id, U>& v)
 		-> vec3_t<ASX::ID_value, decltype(s / v.x)>
 	{
-		vec3_t<ASX::ID_value, decltype(s/ v.x)> temp(v);
-		return temp /= s;
+		vec3_t<ASX::ID_value, decltype(s / v.x)> tmp_v(v);
+		vec3_t<ASX::ID_value, decltype(s / v.x)> tmp_s(s);
+		return tmp_s /= tmp_v;
 	};
 	
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR 
 	auto operator/(const vec3_t<t_id, T>& v, const U s)
 		-> vec3_t<ASX::ID_value, decltype(s / v.x)>
 	{
-		vec3_t<ASX::ID_value, decltype(s / v.x)> temp(v);
-		return temp /= s;
+		vec3_t<ASX::ID_value, decltype(s / v.x)> tmp(v);
+		return tmp /= s;
 	};
 
 
@@ -792,8 +792,8 @@ namespace cml
 	auto operator/(const vec2_t<t_id, T>& v1, const vec2_t<u_id, U>& v2)
 		-> vec2_t<ASX::ID_value, decltype(v1.x / v2.x)>
 	{
-		vec2_t<ASX::ID_value, decltype(v1.x / v2.x)> temp(v1);
-		return temp /= v2;
+		vec2_t<ASX::ID_value, decltype(v1.x / v2.x)> tmp(v1);
+		return tmp /= v2;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
@@ -807,16 +807,17 @@ namespace cml
 	auto operator/(const T s, const vec2_t<t_id, U>& v)
 		-> vec2_t<ASX::ID_value, decltype(s / v.x)>
 	{
-		vec2_t<ASX::ID_value, decltype(s / v.x)> temp(v);
-		return temp /= s;
+		vec2_t<ASX::ID_value, decltype(s / v.x)> tmp_v(v);
+		vec2_t<ASX::ID_value, decltype(s / v.x)> tmp_s(s);
+		return tmp_s /= tmp_v;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
 	auto operator/(const vec2_t<t_id, T>& v, const U s)
 		-> vec2_t<ASX::ID_value, decltype(s / v.x)>
 	{
-		vec2_t<ASX::ID_value, decltype(s / v.x)> temp(v);
-		return temp /= s;
+		vec2_t<ASX::ID_value, decltype(s / v.x)> tmp(v);
+		return tmp /= s;
 	};
 
 	/* -------------------------------------------------------------------------- */
@@ -838,8 +839,8 @@ namespace cml
 	auto operator+(const vec4_t<t_id, T>& v1, const vec4_t<u_id, U>& v2)
 		-> vec4_t<ASX::ID_value, decltype(v1.x+ v2.x)>
 	{
-		vec4_t<ASX::ID_value, decltype(v1.x+ v2.x)> temp(v1);
-		return temp += v2;
+		vec4_t<ASX::ID_value, decltype(v1.x+ v2.x)> tmp(v1);
+		return tmp += v2;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR  
@@ -853,16 +854,16 @@ namespace cml
 	auto operator+(const T s, const vec4_t<t_id, U>& v)
 		-> vec4_t<ASX::ID_value, decltype(s + v.x)>
 	{
-		vec4_t<ASX::ID_value, decltype(s+ v.x)> temp(v);
-		return temp += s;
+		vec4_t<ASX::ID_value, decltype(s+ v.x)> tmp(v);
+		return tmp += s;
 	};
 	
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR 
 	auto operator+(const vec4_t<t_id, T>& v, const U s)
 		-> vec4_t<ASX::ID_value, decltype(s + v.x)>
 	{
-		vec4_t<ASX::ID_value, decltype(s + v.x)> temp(v);
-		return temp += s;
+		vec4_t<ASX::ID_value, decltype(s + v.x)> tmp(v);
+		return tmp += s;
 	};
 
 
@@ -881,8 +882,8 @@ namespace cml
 	auto operator+(const vec3_t<t_id, T>& v1, const vec3_t<u_id, U>& v2)
 		-> vec3_t<ASX::ID_value, decltype(v1.x+ v2.x)>
 	{
-		vec3_t<ASX::ID_value, decltype(v1.x+ v2.x)> temp(v1);
-		return temp += v2;
+		vec3_t<ASX::ID_value, decltype(v1.x+ v2.x)> tmp(v1);
+		return tmp += v2;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR  
@@ -896,16 +897,16 @@ namespace cml
 	auto operator+(const T s, const vec3_t<t_id, U>& v)
 		-> vec3_t<ASX::ID_value, decltype(s + v.x)>
 	{
-		vec3_t<ASX::ID_value, decltype(s+ v.x)> temp(v);
-		return temp += s;
+		vec3_t<ASX::ID_value, decltype(s+ v.x)> tmp(v);
+		return tmp += s;
 	};
 	
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR 
 	auto operator+(const vec3_t<t_id, T>& v, const U s)
 		-> vec3_t<ASX::ID_value, decltype(s + v.x)>
 	{
-		vec3_t<ASX::ID_value, decltype(s + v.x)> temp(v);
-		return temp += s;
+		vec3_t<ASX::ID_value, decltype(s + v.x)> tmp(v);
+		return tmp += s;
 	};
 
 
@@ -924,8 +925,8 @@ namespace cml
 	auto operator+(const vec2_t<t_id, T>& v1, const vec2_t<u_id, U>& v2)
 		-> vec2_t<ASX::ID_value, decltype(v1.x + v2.x)>
 	{
-		vec2_t<ASX::ID_value, decltype(v1.x + v2.x)> temp(v1);
-		return temp += v2;
+		vec2_t<ASX::ID_value, decltype(v1.x + v2.x)> tmp(v1);
+		return tmp += v2;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
@@ -939,16 +940,16 @@ namespace cml
 	auto operator+(const T s, const vec2_t<t_id, U>& v)
 		-> vec2_t<ASX::ID_value, decltype(s + v.x)>
 	{
-		vec2_t<ASX::ID_value, decltype(s + v.x)> temp(v);
-		return temp += s;
+		vec2_t<ASX::ID_value, decltype(s + v.x)> tmp(v);
+		return tmp += s;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
 	auto operator+(const vec2_t<t_id, T>& v, const U s)
 		-> vec2_t<ASX::ID_value, decltype(s + v.x)>
 	{
-		vec2_t<ASX::ID_value, decltype(s + v.x)> temp(v);
-		return temp += s;
+		vec2_t<ASX::ID_value, decltype(s + v.x)> tmp(v);
+		return tmp += s;
 	};
 
 	/* -------------------------------------------------------------------------- */
@@ -970,8 +971,8 @@ namespace cml
 	auto operator-(const vec4_t<t_id, T>& v1, const vec4_t<u_id, U>& v2)
 		-> vec4_t<ASX::ID_value, decltype(v1.x- v2.x)>
 	{
-		vec4_t<ASX::ID_value, decltype(v1.x- v2.x)> temp(v1);
-		return temp -= v2;
+		vec4_t<ASX::ID_value, decltype(v1.x- v2.x)> tmp(v1);
+		return tmp -= v2;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR  
@@ -985,22 +986,23 @@ namespace cml
 	auto operator-(const T s, const vec4_t<t_id, U>& v)
 		-> vec4_t<ASX::ID_value, decltype(s - v.x)>
 	{
-		vec4_t<ASX::ID_value, decltype(s- v.x)> temp(v);
-		return temp -= s;
+		vec4_t<ASX::ID_value, decltype(s - v.x)> tmp_v(v);
+		vec4_t<ASX::ID_value, decltype(s - v.x)> tmp_s(s);
+		return tmp_s -= tmp_v;
 	};
 	
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR 
 	auto operator-(const vec4_t<t_id, T>& v, const U s)
 		-> vec4_t<ASX::ID_value, decltype(s - v.x)>
 	{
-		vec4_t<ASX::ID_value, decltype(s - v.x)> temp(v);
-		return temp -= s;
+		vec4_t<ASX::ID_value, decltype(s - v.x)> tmp(v);
+		return tmp -= s;
 	};
 
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR 
+		ASX::ID u_id, class U> CLM_FUNC_DECL CLM_CONSTEXPR 
 	vec3_t<t_id, T>& operator-=(vec3_t<t_id, T>& v1, const vec3_t<u_id, U>& v2)
 	{
 		v1.x -= v2.x; v1.y -= v2.y; v1.z -= v2.z;
@@ -1009,12 +1011,12 @@ namespace cml
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
+		ASX::ID u_id, class U> CLM_FUNC_DECL CLM_CONSTEXPR
 	auto operator-(const vec3_t<t_id, T>& v1, const vec3_t<u_id, U>& v2)
 		-> vec3_t<ASX::ID_value, decltype(v1.x- v2.x)>
 	{
-		vec3_t<ASX::ID_value, decltype(v1.x- v2.x)> temp(v1);
-		return temp -= v2;
+		vec3_t<ASX::ID_value, decltype(v1.x- v2.x)> tmp(v1);
+		return tmp -= v2;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR  
@@ -1028,22 +1030,23 @@ namespace cml
 	auto operator-(const T s, const vec3_t<t_id, U>& v)
 		-> vec3_t<ASX::ID_value, decltype(s - v.x)>
 	{
-		vec3_t<ASX::ID_value, decltype(s- v.x)> temp(v);
-		return temp -= s;
+		vec3_t<ASX::ID_value, decltype(s- v.x)> tmp_v(v);
+		vec3_t<ASX::ID_value, decltype(s- v.x)> tmp_s(s);
+		return tmp_s -= tmp_v;
 	};
 	
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR 
 	auto operator-(const vec3_t<t_id, T>& v, const U s)
 		-> vec3_t<ASX::ID_value, decltype(s - v.x)>
 	{
-		vec3_t<ASX::ID_value, decltype(s - v.x)> temp(v);
-		return temp -= s;
+		vec3_t<ASX::ID_value, decltype(s - v.x)> tmp(v);
+		return tmp -= s;
 	};
 
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
+		ASX::ID u_id, class U> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec2_t<t_id, T>& operator-=(vec2_t<t_id, T>& v1, const vec2_t<u_id, U>& v2)
 	{
 		v1.x -= v2.x; v1.y -= v2.y;
@@ -1052,12 +1055,12 @@ namespace cml
 
 	template <
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
+		ASX::ID u_id, class U> CLM_FUNC_DECL CLM_CONSTEXPR
 	auto operator-(const vec2_t<t_id, T>& v1, const vec2_t<u_id, U>& v2)
 		-> vec2_t<ASX::ID_value, decltype(v1.x - v2.x)>
 	{
-		vec2_t<ASX::ID_value, decltype(v1.x - v2.x)> temp(v1);
-		return temp -= v2;
+		vec2_t<ASX::ID_value, decltype(v1.x - v2.x)> tmp(v1);
+		return tmp -= v2;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
@@ -1071,16 +1074,17 @@ namespace cml
 	auto operator-(const T s, const vec2_t<t_id, U>& v)
 		-> vec2_t<ASX::ID_value, decltype(s - v.x)>
 	{
-		vec2_t<ASX::ID_value, decltype(s - v.x)> temp(v);
-		return temp -= s;
+		vec2_t<ASX::ID_value, decltype(s - v.x)> tmp_v(v);
+		vec2_t<ASX::ID_value, decltype(s - v.x)> tmp_s(s);
+		return tmp_s -= tmp_v;
 	};
 
 	template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
 	auto operator-(const vec2_t<t_id, T>& v, const U s)
 		-> vec2_t<ASX::ID_value, decltype(s - v.x)>
 	{
-		vec2_t<ASX::ID_value, decltype(s - v.x)> temp(v);
-		return temp -= s;
+		vec2_t<ASX::ID_value, decltype(s - v.x)> tmp(v);
+		return tmp -= s;
 	};
 
 	/* -------------------------------------------------------------------------- */
@@ -1088,25 +1092,28 @@ namespace cml
 	/* -------------------------------------------------------------------------- */
 
 	template <
-		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
-	float dot(const vec4_t<t_id, T>& a, const vec4_t<u_id, U>& b)
+		class T,
+		ASX::ID t_id,
+		ASX::ID u_id> CLM_FUNC_DECL CLM_CONSTEXPR
+	T dot(const vec4_t<t_id, T>& a, const vec4_t<u_id, T>& b)
 	{
 		return (a.x * b.x) + (a.y * b.y) + (a.z * b.z) + (a.w * b.w);
 	}
 
 	template <
-		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
-	float dot(const vec3_t<t_id, T>& a, const vec3_t<u_id, U>& b)
+		class T,
+		ASX::ID t_id,
+		ASX::ID u_id> CLM_FUNC_DECL CLM_CONSTEXPR
+	T dot(const vec3_t<t_id, T>& a, const vec3_t<u_id, T>& b)
 	{
 		return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 	}
 
 	template <
-		ASX::ID t_id, class T,
-		ASX::ID u_id, class U > CLM_FUNC_DECL CLM_CONSTEXPR
-	float dot(const vec2_t<t_id, T>& a, const vec2_t<u_id, U>& b)
+		class T,
+		ASX::ID t_id,
+		ASX::ID u_id> CLM_FUNC_DECL CLM_CONSTEXPR
+	T dot(const vec2_t<t_id, T>& a, const vec2_t<u_id, T>& b)
 	{
 		return (a.x * b.x) + (a.y * b.y);
 	}
@@ -1263,49 +1270,49 @@ namespace cml
 	template <ASX::ID t_id, ASX::ID u_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec4_t<ASX::ID_value, T> max(const vec4_t<t_id, T>& x, const vec4_t<u_id, T>& y)
 	{
-		return vec4_t<ASX::ID_value, T>(::fmax(x.x, y.x), ::fmax(x.y, y.y), ::fmax(x.z, y.z), ::fmax(x.w, y.w));
+		return vec4_t<ASX::ID_value, T>(max(x.x, y.x), max(x.y, y.y), max(x.z, y.z), max(x.w, y.w));
 	}
 	template <ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec4_t<ASX::ID_value, T> max(const T x, const vec4_t<t_id, T>& y)
 	{
-		return vec4_t<ASX::ID_value, T>(::fmax(x, y.x), ::fmax(x, y.y), ::fmax(x, y.z), ::fmax(x, y.w));
+		return vec4_t<ASX::ID_value, T>(max(x, y.x), max(x, y.y), max(x, y.z), max(x, y.w));
 	}
 	template <ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec4_t<ASX::ID_value, T> max(const vec4_t<t_id, T>& x, const T y)
 	{
-		return vec4_t<ASX::ID_value, T>(::fmax(x.x, y), ::fmax(x.y, y), ::fmax(x.z, y), ::fmax(x.w, y));
+		return vec4_t<ASX::ID_value, T>(max(x.x, y), max(x.y, y), max(x.z, y), max(x.w, y));
 	}
 
 	template <ASX::ID t_id, ASX::ID u_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec3_t<ASX::ID_value, T> max(const vec3_t<t_id, T>& x, const vec3_t<u_id, T>& y)
 	{
-		return vec3_t<ASX::ID_value, T>(::fmax(x.x, y.x), ::fmax(x.y, y.y), ::fmax(x.z, y.z));
+		return vec3_t<ASX::ID_value, T>(max(x.x, y.x), max(x.y, y.y), max(x.z, y.z));
 	}
 	template <ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec3_t<ASX::ID_value, T> max(const T x, const vec3_t<t_id, T>& y)
 	{
-		return vec3_t<ASX::ID_value, T>(::fmax(x, y.x), ::fmax(x, y.y), ::fmax(x, y.z));
+		return vec3_t<ASX::ID_value, T>(max(x, y.x), max(x, y.y), max(x, y.z));
 	}
 	template <ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec3_t<ASX::ID_value, T> max(const vec3_t<t_id, T>& x, const T y)
 	{
-		return vec3_t<ASX::ID_value, T>(::fmax(x.x, y), ::fmax(x.y, y), ::fmax(x.z, y));
+		return vec3_t<ASX::ID_value, T>(max(x.x, y), max(x.y, y), max(x.z, y));
 	}
 
 	template <ASX::ID t_id, ASX::ID u_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec2_t<ASX::ID_value, T> max(const vec2_t<t_id, T>& x, const vec2_t<u_id, T>& y)
 	{
-		return vec2_t<ASX::ID_value, T>(::fmax(x.x, y.x), ::fmax(x.y, y.y));
+		return vec2_t<ASX::ID_value, T>(max(x.x, y.x), max(x.y, y.y));
 	}
 	template <ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec2_t<ASX::ID_value, T> max(const T x, const vec2_t<t_id, T>& y)
 	{
-		return vec2_t<ASX::ID_value, T>(::fmax(x, y.x), ::fmax(x, y.y));
+		return vec2_t<ASX::ID_value, T>(max(x, y.x), max(x, y.y));
 	}
 	template <ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec2_t<ASX::ID_value, T> max(const vec2_t<t_id, T>& x, const T y)
 	{
-		return vec2_t<ASX::ID_value, T>(::fmax(x.x, y), ::fmax(x.y, y));
+		return vec2_t<ASX::ID_value, T>(max(x.x, y), max(x.y, y));
 	}
 
 	/* -------------------------------------------------------------------------- */
@@ -1315,49 +1322,49 @@ namespace cml
 	template <ASX::ID t_id, ASX::ID u_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec4_t<ASX::ID_value, T> min(const vec4_t<t_id, T>& x, const vec4_t<u_id, T>& y)
 	{
-		return vec4_t<ASX::ID_value, T>(::fmin(x.x, y.x), ::fmin(x.y, y.y), ::fmin(x.z, y.z), ::fmin(x.w, y.w));
+		return vec4_t<ASX::ID_value, T>(min(x.x, y.x), min(x.y, y.y), min(x.z, y.z), min(x.w, y.w));
 	}
 	template <ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec4_t<ASX::ID_value, T> min(const T x, const vec4_t<t_id, T>& y)
 	{
-		return vec4_t<ASX::ID_value, T>(::fmin(x, y.x), ::fmin(x, y.y), ::fmin(x, y.z), ::fmin(x, y.w));
+		return vec4_t<ASX::ID_value, T>(min(x, y.x), min(x, y.y), min(x, y.z), min(x, y.w));
 	}
 	template <ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec4_t<ASX::ID_value, T> min(const vec4_t<t_id, T>& x, const T y)
 	{
-		return vec4_t<ASX::ID_value, T>(::fmin(x.x, y), ::fmin(x.y, y), ::fmin(x.z, y), ::fmin(x.w, y));
+		return vec4_t<ASX::ID_value, T>(min(x.x, y), min(x.y, y), min(x.z, y), min(x.w, y));
 	}
 
 	template <ASX::ID t_id, ASX::ID u_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec3_t<ASX::ID_value, T> min(const vec3_t<t_id, T>& x, const vec3_t<u_id, T>& y)
 	{
-		return vec3_t<ASX::ID_value, T>(::fmin(x.x, y.x), ::fmin(x.y, y.y), ::fmin(x.z, y.z));
+		return vec3_t<ASX::ID_value, T>(min(x.x, y.x), min(x.y, y.y), min(x.z, y.z));
 	}
 	template <ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec3_t<ASX::ID_value, T> min(const T x, const vec3_t<t_id, T>& y)
 	{
-		return vec3_t<ASX::ID_value, T>(::fmin(x, y.x), ::fmin(x, y.y), ::fmin(x, y.z));
+		return vec3_t<ASX::ID_value, T>(min(x, y.x), min(x, y.y), min(x, y.z));
 	}
 	template <ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec3_t<ASX::ID_value, T> min(const vec3_t<t_id, T>& x, const T y)
 	{
-		return vec3_t<ASX::ID_value, T>(::fmin(x.x, y), ::fmin(x.y, y), ::fmin(x.z, y));
+		return vec3_t<ASX::ID_value, T>(min(x.x, y), min(x.y, y), min(x.z, y));
 	}
 
 	template <ASX::ID t_id, ASX::ID u_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec2_t<ASX::ID_value, T> min(const vec2_t<t_id, T>& x, const vec2_t<u_id, T>& y)
 	{
-		return vec2_t<ASX::ID_value, T>(::fmin(x.x, y.x), ::fmin(x.y, y.y));
+		return vec2_t<ASX::ID_value, T>(min(x.x, y.x), min(x.y, y.y));
 	}
 	template <ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec2_t<ASX::ID_value, T> min(const T x, const vec2_t<t_id, T>& y)
 	{
-		return vec2_t<ASX::ID_value, T>(::fmin(x, y.x), ::fmin(x, y.y));
+		return vec2_t<ASX::ID_value, T>(min(x, y.x), min(x, y.y));
 	}
 	template <ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec2_t<ASX::ID_value, T> min(const vec2_t<t_id, T>& x, const T y)
 	{
-		return vec2_t<ASX::ID_value, T>(::fmin(x.x, y), ::fmin(x.y, y));
+		return vec2_t<ASX::ID_value, T>(min(x.x, y), min(x.y, y));
 	}
 
 	/* -------------------------------------------------------------------------- */
@@ -1385,24 +1392,25 @@ namespace cml
 	/* -------------------------------------------------------------------------- */
 
 	template <template<ASX::ID, class> class vec_t, ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
-	float length(const vec_t<t_id, T>& v)
+	T length(const vec_t<t_id, T>& v)
 	{
-		return ::sqrtf(dot(v, v));
+		return sqrtl(dot(v, v));
 	}
 
 	template <template<ASX::ID, class> class vec_t, ASX::ID t_id, class T> CLM_FUNC_DECL CLM_CONSTEXPR
 	vec_t<ASX::ID_value, T> normalize(const vec_t<t_id, T>& v)
 	{
 		vec_t<ASX::ID_value, T> tmp(v);
-		float l = length(v);
-		return (l == 0.f) ? tmp : tmp / l;
+		T l = length(v);
+		return (l == static_cast<T>(0)) ? tmp : tmp / l;
 	}
 
 	template <
-		template<ASX::ID, class> class vec_t,
-		ASX::ID t_id, class T,
-		ASX::ID u_id, class U> CLM_FUNC_DECL CLM_CONSTEXPR
-	float distance(const vec_t<t_id, T>& a, const vec_t<u_id, U>& b)
+		template<ASX::ID, class> class vec_t, 
+		class T, 
+		ASX::ID t_id,
+		ASX::ID u_id> CLM_FUNC_DECL CLM_CONSTEXPR
+	T distance(const vec_t<t_id, T>& a, const vec_t<u_id, T>& b)
 	{
 		return length(b - a);
 	}
@@ -1410,11 +1418,11 @@ namespace cml
 	template <
 		template<ASX::ID, class> class vec_t,
 		ASX::ID t_id, class T,
-		ASX::ID u_id, class U,
-		ASX::ID v_id, class V, 
-		ASX::ID w_id, class W, 
-		ASX::ID x_id, class X> CLM_FUNC_DECL CLM_CONSTEXPR
-	auto remap(const vec_t<t_id, T>& h1, const vec_t<u_id, U>& l1, const vec_t<v_id, V>& h2, const vec_t<w_id, W>& l2, const vec_t<x_id, X>& v)
+		ASX::ID u_id,
+		ASX::ID v_id, 
+		ASX::ID w_id, 
+		ASX::ID x_id> CLM_FUNC_DECL CLM_CONSTEXPR
+	auto remap(const vec_t<t_id, T>& h1, const vec_t<u_id, T>& l1, const vec_t<v_id, T>& h2, const vec_t<w_id, T>& l2, const vec_t<x_id, T>& v)
 		-> vec_t<ASX::ID_value, decltype(l2.x + (v.x - l1.x) * (h2.x - l2.x) / (h1.x - l1.x))>
 	{
 		return l2 + (v - l1) * (h2 - l2) / (h1 - l1);
@@ -1422,9 +1430,10 @@ namespace cml
 
 	template <
 		template<ASX::ID, class> class vec_t,
-		ASX::ID t_id, class T,
-		ASX::ID u_id, class U> CLM_FUNC_DECL CLM_CONSTEXPR
-	auto mix(const vec_t<t_id, T>&a, const vec_t<u_id, U>&b, const float t)
+		class T,
+		ASX::ID t_id,
+		ASX::ID u_id> CLM_FUNC_DECL CLM_CONSTEXPR
+	auto mix(const vec_t<t_id, T>&a, const vec_t<u_id, T>&b, const float t)
 		-> vec_t<ASX::ID_value, decltype(a.x * (1.0 - t) + b.x * t)>
 	{
 		return a * (1.f - t) + b * t;
@@ -1432,9 +1441,10 @@ namespace cml
 
 	template <
 		template<ASX::ID, class> class vec_t,
-		ASX::ID t_id, class T,
-		ASX::ID u_id, class U> CLM_FUNC_DECL CLM_CONSTEXPR
-	auto smooth_step(const vec_t<t_id, T>& a, const vec_t<u_id, U>& b, const float x)
+		class T,
+		ASX::ID t_id,
+		ASX::ID u_id> CLM_FUNC_DECL CLM_CONSTEXPR
+	auto smooth_step(const vec_t<t_id, T>& a, const vec_t<u_id, T>& b, const float x)
 		-> vec_t<ASX::ID_value, decltype((x - a.x) / (b.x - a.x))>
 	{
 		float y = clamp((x - a) / (b - a), 0.f, 1.f);
@@ -1446,17 +1456,19 @@ namespace cml
 	/* -------------------------------------------------------------------------- */
 
 	template <
-		ASX::ID t_id, class T, 
-		ASX::ID u_id, class U> CLM_FUNC_DECL CLM_CONSTEXPR
-	vec3_t<ASX::ID_value, T> reflect(const vec3_t<t_id, T>& i, const vec3_t<u_id, U>& n)
+		class T,
+		ASX::ID t_id,
+		ASX::ID u_id> CLM_FUNC_DECL CLM_CONSTEXPR
+	vec3_t<ASX::ID_value, T> reflect(const vec3_t<t_id, T>& i, const vec3_t<u_id, T>& n)
 	{
 		return i - 2.f * n * dot(n, i);
 	}
 
 	template <
-		ASX::ID t_id, class T,
-		ASX::ID u_id, class U> CLM_FUNC_DECL CLM_CONSTEXPR
-		vec3_t<ASX::ID_value, T> cross(const vec3_t<t_id, T>& a, const vec3_t<u_id, U>& b)
+		class T,
+		ASX::ID t_id,
+		ASX::ID u_id> CLM_FUNC_DECL CLM_CONSTEXPR
+		vec3_t<ASX::ID_value, T> cross(const vec3_t<t_id, T>& a, const vec3_t<u_id, T>& b)
 	{
 		return vec3_t<ASX::ID_value, T>(
 			a.y * b.z - a.z * b.y,
@@ -1469,8 +1481,8 @@ namespace cml
 	{
 		return (0.299 * r + 0.587 * g + 0.114 * b);
 	}
-	static CLM_FUNC_DECL
-		float luminance(const vec3f& color)
+
+	static CLM_FUNC_DECL float luminance(const vec3f& color)
 	{
 		return (0.299 * color.x + 0.587 * color.y + 0.114 * color.z);
 	}
@@ -1489,12 +1501,14 @@ namespace cml
 
 		return normalize(x);
 	}
+
 	static CLM_FUNC_DECL
 		vec2f sample_spherical_map(const vec3f& d)
 	{
 		vec2f uv = vec2f(0.5f + ::atan2(d.z, d.x) * M_1_2PI, 0.5f - ::asin(d.y) * M_1_PI);
 		return uv;
 	}
+
 	static CLM_FUNC_DECL
 		vec3f sample_spherical_direction(const vec2f& uv)
 	{

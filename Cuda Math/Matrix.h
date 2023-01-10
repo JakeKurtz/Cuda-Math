@@ -33,21 +33,23 @@ namespace cml
         T t33;
         */
 
-        _HOST_DEVICE Matrix4x4()
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix4x4()
         {
             m[0][0] = m[1][1] = m[2][2] = m[3][3] = 1;
             m[0][1] = m[0][2] = m[0][3] = m[1][0] =
             m[1][2] = m[1][3] = m[2][0] = m[2][1] =
             m[2][3] = m[3][0] = m[3][1] = m[3][2] = 0;
         };
-        _HOST_DEVICE Matrix4x4(T x)
+
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix4x4(T x)
         {
             m[0][0] = m[1][1] = m[2][2] = m[3][3] =
             m[0][1] = m[0][2] = m[0][3] = m[1][0] =
             m[1][2] = m[1][3] = m[2][0] = m[2][1] =
             m[2][3] = m[3][0] = m[3][1] = m[3][2] = x;
         };
-        _HOST_DEVICE Matrix4x4(
+
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix4x4(
             T t00, T t01, T t02, T t03,
             T t10, T t11, T t12, T t13,
             T t20, T t21, T t22, T t23,
@@ -58,8 +60,9 @@ namespace cml
             m[2][0] = t20; m[2][1] = t21; m[2][2] = t22; m[2][3] = t23;
             m[3][0] = t30; m[3][1] = t31; m[3][2] = t32; m[3][3] = t33;
         };
+
         template <ASX::ID t_id>
-        _HOST_DEVICE Matrix4x4(
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix4x4(
             const vec4_t<t_id, T>&v0,
             const vec4_t<t_id, T>&v1,
             const vec4_t<t_id, T>&v2,
@@ -70,7 +73,8 @@ namespace cml
             m[2][0] = v2.x; m[2][1] = v2.y; m[2][2] = v2.z; m[2][3] = v2.w;
             m[3][0] = v3.x; m[3][1] = v3.y; m[3][2] = v3.z; m[3][3] = v3.w;
         };
-        _HOST Matrix4x4(const glm::mat4 & _m)
+
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix4x4(const glm::mat4 & _m)
         {
             m[0][0] = _m[0][0]; m[0][1] = _m[0][1]; m[0][2] = _m[0][2]; m[0][3] = _m[0][3];
             m[1][0] = _m[1][0]; m[1][1] = _m[1][1]; m[1][2] = _m[1][2]; m[1][3] = _m[1][3];
@@ -83,7 +87,7 @@ namespace cml
 
         };
 
-        _HOST_DEVICE void print()
+        CLM_FUNC_DECL CLM_CONSTEXPR void print()
         {
             printf("[%f,%f,%f,%f]\n[%f,%f,%f,%f]\n[%f,%f,%f,%f]\n[%f,%f,%f,%f]\n\n",
                 m[0][0], m[0][1], m[0][2], m[0][3],
@@ -93,52 +97,61 @@ namespace cml
             );
         };
     };
+
     template <class T> struct _ALIGN(64) Matrix3x3
     {
         static_assert(sizeof(T) == 4, "T is not 4 bytes");
 
         T m[3][3];
 
-        _HOST_DEVICE Matrix3x3();
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix3x3();
 
-        _HOST_DEVICE Matrix3x3(T x);
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix3x3(T x);
 
-        _HOST_DEVICE Matrix3x3(
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix3x3(
             T t00, T t01, T t02,
             T t10, T t11, T t12,
             T t20, T t21, T t22);
 
         template<ASX::ID t_id>
-        _HOST_DEVICE Matrix3x3(
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix3x3(
             const vec3_t<t_id, T>&v0,
             const vec3_t<t_id, T>&v1,
             const vec3_t<t_id, T>&v2);
 
-        _HOST Matrix3x3(const glm::mat3 & m);
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix3x3(const glm::mat4& m);
+
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix3x3(const glm::mat3& m);
+
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix3x3(const glm::mat2& m);
 
         operator Matrix4x4<T>() const;
 
-        _HOST_DEVICE void print();
+        CLM_FUNC_DECL CLM_CONSTEXPR void print();
     };
+
     template <class T> struct _ALIGN(16) Matrix2x2
     {
         static_assert(sizeof(T) == 4, "T is not 4 bytes");
 
         T m[2][2];
 
-        _HOST_DEVICE Matrix2x2();
-        _HOST_DEVICE Matrix2x2(T x);
-        _HOST_DEVICE Matrix2x2(
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix2x2();
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix2x2(T x);
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix2x2(
             T t00, T t01,
             T t10, T t11);
 
         template<ASX::ID t_id>
-        _HOST_DEVICE Matrix2x2(
-            const vec2_t<t_id, T>&v0,
-            const vec2_t<t_id, T>&v1);
-        _HOST Matrix2x2(const glm::mat2 & m);
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix2x2(const vec2_t<t_id, T>&v0, const vec2_t<t_id, T>&v1);
 
-        _HOST_DEVICE void print();
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix2x2(const glm::mat4 & _m);
+
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix2x2(const glm::mat3 & _m);
+        
+        CLM_FUNC_DECL CLM_CONSTEXPR Matrix2x2(const glm::mat2 & m);
+
+        CLM_FUNC_DECL CLM_CONSTEXPR void print();
     };
 
     typedef Matrix4x4<float>    Matrix4x4f;
@@ -157,14 +170,14 @@ namespace cml
     /*                                 Comparators                                */
     /* -------------------------------------------------------------------------- */
 
-    template<class T> _HOST_DEVICE bool operator==(const Matrix4x4<T>& m1, const Matrix4x4<T>& m2)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR bool operator==(const Matrix4x4<T>& m1, const Matrix4x4<T>& m2)
     {
         for (int i = 0; i < 4; ++i)
             for (int j = 0; j < 4; ++j)
                 if (m1.m[i][j] != m2.m[i][j]) return false;
         return true;
     }
-    template<class T> _HOST_DEVICE bool operator!=(const Matrix4x4<T>& m1, const Matrix4x4<T>& m2)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR bool operator!=(const Matrix4x4<T>& m1, const Matrix4x4<T>& m2)
     {
         for (int i = 0; i < 4; ++i)
             for (int j = 0; j < 4; ++j)
@@ -176,8 +189,8 @@ namespace cml
     /*                               Multiplication                               */
     /* -------------------------------------------------------------------------- */
 
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> operator*(const Matrix4x4<T>& m1, const Matrix4x4<T>& m2)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> operator*(const Matrix4x4<T>& m1, const Matrix4x4<T>& m2)
     {
         Matrix4x4<T> out;
         for (int i = 0; i < 4; i++) {
@@ -189,8 +202,8 @@ namespace cml
         }
         return out;
     }
-    template <ASX::ID t_id, class T, class U> _HOST_DEVICE
-    inline vec4_t<t_id, T> operator*=(vec4_t<t_id, T>& v, const Matrix4x4<T>& m)
+    template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
+    vec4_t<t_id, T> operator*=(vec4_t<t_id, T>& v, const Matrix4x4<T>& m)
     {
         vec4<T> tmp(v);
         tmp.x = m.m[0][0] * v.x + m.m[0][1] * v.y + m.m[0][2] * v.z + m.m[0][3] * v.w;
@@ -202,8 +215,8 @@ namespace cml
 
         return v;
     }
-    template <ASX::ID t_id, class T, class U> _HOST_DEVICE
-    inline auto operator*(const Matrix4x4<T>& m, const vec4_t<t_id, T>& v)
+    template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
+    auto operator*(const Matrix4x4<T>& m, const vec4_t<t_id, T>& v)
         ->vec4<decltype(m.m[0][0] * v.x)>
     {
         vec4<decltype(m.m[0][0] * v.x)> out;
@@ -213,8 +226,8 @@ namespace cml
         out.w = m.m[0][3] * v.x + m.m[1][3] * v.y + m.m[2][3] * v.z + m.m[3][3] * v.w;
         return out;
     }
-    template <ASX::ID t_id, class T, class U> _HOST_DEVICE
-    inline vec3_t<t_id, T> operator*=(vec3_t<t_id, T>& v, const Matrix4x4<T>& m)
+    template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
+    vec3_t<t_id, T> operator*=(vec3_t<t_id, T>& v, const Matrix4x4<T>& m)
     {
         vec4<T> tmp(v, 1); tmp *= m;
 
@@ -224,16 +237,16 @@ namespace cml
 
         return v;
     }
-    template <ASX::ID t_id, class T, class U> _HOST_DEVICE
-    inline auto operator*(const Matrix4x4<T>& m, const vec3_t<t_id, T>& v)
+    template <ASX::ID t_id, class T, class U> CLM_FUNC_DECL CLM_CONSTEXPR
+    auto operator*(const Matrix4x4<T>& m, const vec3_t<t_id, T>& v)
         ->vec3<decltype(m.m[0][0] * v.x)>
     {
         vec4<decltype(m.m[0][0] * v.x)> tmp(v, 1); tmp = m * tmp;
         return (tmp.w == static_cast<T>(0)) ? vec3<decltype(m.m[0][0] * v.x)>(0) : 1.0 / tmp.w * vec3<decltype(m.m[0][0] * v.x)>(tmp.x, tmp.y, tmp.z);
     }
 
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> operator*(const T s, const Matrix4x4<T>& m)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> operator*(const T s, const Matrix4x4<T>& m)
     {
         Matrix4x4<T> out;
         for (int i = 0; i < 4; ++i)
@@ -241,8 +254,8 @@ namespace cml
                 out.m[i][j] = s * m.m[i][j];
         return out;
     }
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> operator*(const Matrix4x4<T>& m, const T s)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> operator*(const Matrix4x4<T>& m, const T s)
     {
         Matrix4x4<T> out;
         for (int i = 0; i < 4; ++i)
@@ -255,8 +268,8 @@ namespace cml
     /*                                  Division                                  */
     /* -------------------------------------------------------------------------- */
 
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> operator/(const Matrix4x4<T>& m1, const Matrix4x4<T>& m2)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> operator/(const Matrix4x4<T>& m1, const Matrix4x4<T>& m2)
     {
         Matrix4x4<T> out;
         for (int i = 0; i < 4; ++i)
@@ -269,8 +282,8 @@ namespace cml
     /*                                  Addition                                  */
     /* -------------------------------------------------------------------------- */
 
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> operator+(const Matrix4x4<T>& m1, const Matrix4x4<T>& m2)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> operator+(const Matrix4x4<T>& m1, const Matrix4x4<T>& m2)
     {
         Matrix4x4<T> out;
         for (int i = 0; i < 4; ++i)
@@ -283,8 +296,8 @@ namespace cml
     /*                                 Subtraction                                */
     /* -------------------------------------------------------------------------- */
 
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> operator-(const Matrix4x4<T>& m1, const Matrix4x4<T>& m2)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> operator-(const Matrix4x4<T>& m1, const Matrix4x4<T>& m2)
     {
         Matrix4x4<T> out;
         for (int i = 0; i < 4; ++i)
@@ -297,8 +310,8 @@ namespace cml
     /*                                  Negation                                  */
     /* -------------------------------------------------------------------------- */
 
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> operator-(const Matrix4x4<T>& m1)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> operator-(const Matrix4x4<T>& m1)
     {
         Matrix4x4<T> out;
         for (int i = 0; i < 4; ++i)
@@ -307,8 +320,8 @@ namespace cml
         return out;
     }
 
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> transpose(const Matrix4x4<T>& m)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> transpose(const Matrix4x4<T>& m)
     {
         return Matrix4x4<T>(
             m.m[0][0], m.m[1][0], m.m[2][0], m.m[3][0],
@@ -316,8 +329,8 @@ namespace cml
             m.m[0][2], m.m[1][2], m.m[2][2], m.m[3][2],
             m.m[0][3], m.m[1][3], m.m[2][3], m.m[3][3]);
     }
-    template<class T> _HOST_DEVICE
-    inline T det(const Matrix4x4<T>& m)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    T det(const Matrix4x4<T>& m)
     {
         T d =
             m.m[3][0] * m.m[2][1] * m.m[1][2] * m.m[0][3] - m.m[2][0] * m.m[3][1] * m.m[1][2] * m.m[0][3] -
@@ -335,8 +348,8 @@ namespace cml
 
         return d;
     }
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> inv(const Matrix4x4<T>& m)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> inv(const Matrix4x4<T>& m)
     {
         Matrix4x4<T> inv;
         double det;
@@ -467,8 +480,8 @@ namespace cml
         return inv;
     }
 
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> look_at(const vec3f& eye, const vec3f& look, const vec3f& up)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> look_at(const vec3f& eye, const vec3f& look, const vec3f& up)
     {
         vec3f d = normalize(look - eye);
         vec3f r = normalize(cross(d, up));
@@ -491,8 +504,8 @@ namespace cml
 
         return out;
     }
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> perspective(T fovy, T aspect, T zNear, T zFar)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> perspective(T fovy, T aspect, T zNear, T zFar)
     {
         float const tan_half_fovy = tan(fovy / 2.f);
         Matrix4x4<T> out;
@@ -504,18 +517,18 @@ namespace cml
         return out;
     }
 
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> zero(void)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> zero(void)
     {
         return Matrix4x4<T>(0);
     }
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> ones(void)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> ones(void)
     {
         return Matrix4x4<T>(1);
     }
-    template<class T> _HOST_DEVICE
-    inline Matrix4x4<T> unit(void)
+    template<class T> CLM_FUNC_DECL CLM_CONSTEXPR
+    Matrix4x4<T> unit(void)
     {
         return Matrix4x4<T>(
             1, 0, 0, 0,
@@ -525,7 +538,7 @@ namespace cml
     }
 
     /*
-    inline __device__ dRay operator*(const Matrix4x4 m, const dRay r)
+    __device__ dRay operator*(const Matrix4x4 m, const dRay r)
     {
         dRay out;
 
@@ -537,7 +550,7 @@ namespace cml
 
         return out;
     }
-    inline __device__ dRay operator*(const dRay r, const Matrix4x4 m)
+    __device__ dRay operator*(const dRay r, const Matrix4x4 m)
     {
         dRay out;
 
@@ -550,7 +563,7 @@ namespace cml
         return out;
     }
 
-    static inline Matrix4x4 Matrix4x4_cast(const glm::mat4& m)
+    static Matrix4x4 Matrix4x4_cast(const glm::mat4& m)
     {
         return Matrix4x4(
             m[0][0], m[0][1], m[0][2], m[0][3],
