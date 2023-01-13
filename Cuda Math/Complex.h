@@ -3,7 +3,7 @@
 
 #include "CudaCommon.h"
 #include "GLCommon.h"
-#include "Vector.h"
+#include "vec.h"
 
 namespace cml
 {
@@ -17,7 +17,7 @@ namespace cml
 	typedef complex<uint32_t>	ucomplex;
 
 	template <ASX::ID t_id, typename T>
-	struct _ALIGN(sizeof(T) * 2) complex_t
+	struct CML_ALIGN(sizeof(T) * 2) complex_t
 	{
 		static_assert(std::is_arithmetic<T>::value, "Type must be must be numeric");
 
@@ -38,27 +38,27 @@ namespace cml
 		template<ASX::ID u_id>
 		CLM_FUNC_DECL CLM_CONSTEXPR complex_t(const vec2_t<u_id, T>&c) : r(c.r), i(c.i) {};
 
-		template<ASX::ID u_id, Numeric_Type(U)>
+		template<ASX::ID u_id, NUMERIC_TYPE(U)>
 		CLM_FUNC_DECL CLM_CONSTEXPR complex_t<t_id, T>& operator=(const complex_t<u_id, U>& other)
 		{
 			r = static_cast<T>(other.r); i = static_cast<T>(other.i);
 			return *this;
 		};
 
-		template<ASX::ID u_id, Numeric_Type(U)>
+		template<ASX::ID u_id, NUMERIC_TYPE(U)>
 		CLM_FUNC_DECL CLM_CONSTEXPR complex_t<t_id, T>& operator=(const vec2_t<u_id, U>& other)
 		{
 			r = static_cast<T>(other.x); i = static_cast<T>(other.y);
 			return *this;
 		};
 
-		template<ASX::ID u_id, Numeric_Type(U)>
+		template<ASX::ID u_id, NUMERIC_TYPE(U)>
 		CLM_FUNC_DECL CLM_CONSTEXPR operator complex_t<u_id, T>() const
 		{
 			return complex_t<ASX::ID_value, U>(r, i);
 		};
 
-		template<ASX::ID u_id, Numeric_Type(U)>
+		template<ASX::ID u_id, NUMERIC_TYPE(U)>
 		CLM_FUNC_DECL CLM_CONSTEXPR operator vec2_t<u_id, T>() const
 		{
 			return vec2<ASX::ID_value, U>(r, i);
@@ -78,7 +78,7 @@ namespace cml
 			return glm::vec2(r, i);
 		};
 
-		template<Numeric_Type(U)>
+		template<NUMERIC_TYPE(U)>
 		CLM_FUNC_DECL CLM_CONSTEXPR void polar_form(U & radius, U & theta)
 		{
 			radius = modulus(this);

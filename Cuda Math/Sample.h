@@ -1,7 +1,7 @@
 #ifndef _CML_SAMPLE_
 #define _CML_SAMPLE_
 
-#include "Vector.h"
+#include "vec.h"
 
 namespace cml
 {

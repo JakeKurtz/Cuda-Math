@@ -3,7 +3,7 @@
 
 #define _UNIT_TEST_
 
-#include <Vector.h>
+#include <vec.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace cml;

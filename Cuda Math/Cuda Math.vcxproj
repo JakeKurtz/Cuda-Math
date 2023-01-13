@@ -86,10 +86,13 @@
       <TargetMachinePlatform>64</TargetMachinePlatform>
       <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
       <CodeGeneration>compute_80,sm_80</CodeGeneration>
-      <MaxRegCount>1024</MaxRegCount>
+      <MaxRegCount>64</MaxRegCount>
       <FastMath>false</FastMath>
       <InterleaveSourceInPTX>false</InterleaveSourceInPTX>
       <Optimization>O3</Optimization>
+      <AdditionalOptions>--shared %(AdditionalOptions)</AdditionalOptions>
+      <NvccCompilation>compile</NvccCompilation>
+      <PtxAsOptionV>false</PtxAsOptionV>
     </CudaCompile>
     <CudaLink />
     <CudaLink />
@@ -104,7 +107,7 @@
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Sample.h" />
-    <ClInclude Include="Vector.h" />
+    <ClInclude Include="vec.h" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="Matrix.h" />
@@ -119,6 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CudaCommon.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="vec.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

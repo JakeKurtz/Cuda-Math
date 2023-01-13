@@ -1,6 +1,17 @@
 #pragma once
 
-#define Numeric_Type(T) typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type
+#define CML_DISABLE		0
+#define CML_ENABLE		1
+
+#define CML_ALIGNED_GENTYPES CML_ENABLE
+
+#if CML_ALIGNED_GENTYPES == CML_DISABLE
+	#define CML_ALIGN(n) alignas(n)
+#else
+	#define CML_ALIGN(n) alignas(0)
+#endif
+
+#define NUMERIC_TYPE(T) typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type
 
 #if defined(_UNIT_TEST_)
 
@@ -35,19 +46,17 @@ extern void check_cuda(cudaError_t result, char const* const func, const char* c
 
 #include "cuda_runtime.h"
 
-#define _ALIGN(n) alignas(n)
-#define _CONSTANT __constant__ const
+#define CML_CONSTANT __constant__ const
 
 #define CLM_FUNC_DECL  __host__ __device__ 
 #define CLM_CONSTEXPR constexpr
 
 #elif defined(__GNUC__) // GCC
-#define _ALIGN(n) __attribute__((aligned(n)))
-#define _CONSTANT const
+#define CML_ALIGN(n) __attribute__((aligned(n)))
+#define CML_CONSTANT const
 
 #elif defined(_MSC_VER) // MSVC
-#define _ALIGN(n) alignas(n)
-#define _CONSTANT const
+#define CML_CONSTANT const
 
 #define CLM_FUNC_DECL
 #define CLM_CONSTEXPR constexpr

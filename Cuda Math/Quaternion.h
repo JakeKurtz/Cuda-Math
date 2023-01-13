@@ -3,7 +3,7 @@
 
 #include "CudaCommon.h"
 #include "GLCommon.h"
-#include "Vector.h"
+#include "vec.h"
 #include "Matrix.h"
 
 namespace cml
@@ -17,7 +17,7 @@ namespace cml
 	typedef quat<uint32_t>	quatu;
 
 	template <ASX::ID t_id, typename T>
-	struct _ALIGN(sizeof(T) * 4) quat_t
+	struct CML_ALIGN(sizeof(T) * 4) quat_t
 	{
 		static_assert(std::is_arithmetic<T>::value, "Type must be must be numeric");
 

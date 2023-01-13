@@ -1,7 +1,7 @@
 #ifndef _CML_MATRIX_
 #define _CML_MATRIX_
 
-#include "Vector.h"
+#include "vec.h"
 
 namespace cml
 {
@@ -9,7 +9,7 @@ namespace cml
     template <class T> struct Matrix3x3;
     template <class T> struct Matrix2x2;
 
-    template <class T> struct _ALIGN(64) Matrix4x4
+    template <class T> struct CML_ALIGN(64) Matrix4x4
     {
         static_assert(sizeof(T) == 4, "T is not 4 bytes");
 
@@ -98,7 +98,7 @@ namespace cml
         };
     };
 
-    template <class T> struct _ALIGN(64) Matrix3x3
+    template <class T> struct CML_ALIGN(64) Matrix3x3
     {
         static_assert(sizeof(T) == 4, "T is not 4 bytes");
 
@@ -130,7 +130,7 @@ namespace cml
         CLM_FUNC_DECL CLM_CONSTEXPR void print();
     };
 
-    template <class T> struct _ALIGN(16) Matrix2x2
+    template <class T> struct CML_ALIGN(16) Matrix2x2
     {
         static_assert(sizeof(T) == 4, "T is not 4 bytes");
 
