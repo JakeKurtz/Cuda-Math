@@ -44,5 +44,12 @@ Please feel free to open an issue or pull request if you have any suggestions or
 
 ### Current road map
 - Better unit test coverage
+  -  ~Vectors~
+  -  ~Complex Numbers~
+  -  Qauternions
+  -  2D Matrix
+  -  3D Matrix
+  -  4D Matrix
 - Speed testing
-- 2D and 3D Matrix implementation
+- Graphics specific functions
+- ~2D and 3D Matrix implementation~
