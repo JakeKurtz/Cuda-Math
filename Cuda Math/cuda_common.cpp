@@ -1,4 +1,4 @@
-#include "CudaCommon.h"
+#include "cuda_common.h"
 #include <iostream>
 
 extern void check_cuda(cudaError_t result, char const* const func, const char* const file, int const line) {

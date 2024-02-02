@@ -117,6 +117,34 @@ namespace VectorTest
 			v = vec2f(b); Assert::IsTrue(v.x == 5.f && v.y == 6.f);
 			v = vec2f(c); Assert::IsTrue(v.x == 8.f && v.y == 9.f);
 		}
+		TEST_METHOD(TestConstructor_MixingTypes)
+		{
+			vec4f v4f = vec4f(1, 2, 3, 4);				Assert::IsTrue(v4f.x == 1.f && v4f.y == 2.f && v4f.z == 3.f && v4f.w == 4.f);
+			vec3f v3f = vec3f(1, 2, 3);					Assert::IsTrue(v3f.x == 1.f && v3f.y == 2.f && v3f.z == 3.f);
+			vec2f v2f = vec2f(1, 2);					Assert::IsTrue(v2f.x == 1.f && v2f.y == 2.f);
+
+			vec4i v4i = vec4i(1.f, 2.f, 3.f, 4.f);	Assert::IsTrue(v4i.x == 1 && v4i.y == 2 && v4i.z == 3 && v4i.w == 4);
+			vec3i v3i = vec3i(1.f, 2.f, 3.f);		Assert::IsTrue(v3i.x == 1 && v3i.y == 2 && v4i.z == 3);
+			vec2i v2i = vec2i(1.f, 2.f);			Assert::IsTrue(v2i.x == 1 && v2i.y == 2);
+
+			v4f = vec4f(v2i, 3, 4);		Assert::IsTrue(v4f.x == 1.f && v4f.y == 2.f && v4f.z == 3.f && v4f.w == 4.f);
+			v4f = vec4f(v3i, 4);		Assert::IsTrue(v4f.x == 1.f && v4f.y == 2.f && v4f.z == 3.f && v4f.w == 4.f);
+			v4f = vec4f(v4i);			Assert::IsTrue(v4f.x == 1.f && v4f.y == 2.f && v4f.z == 3.f && v4f.w == 4.f);
+
+			v4i = vec4i(v2f, 3.f, 4.f);	Assert::IsTrue(v4i.x == 1 && v4i.y == 2 && v4i.z == 3 && v4i.w == 4);
+			v4i = vec4i(v3f, 4.f);		Assert::IsTrue(v4i.x == 1 && v4i.y == 2 && v4i.z == 3 && v4i.w == 4);
+			v4i = vec4i(v4f);			Assert::IsTrue(v4i.x == 1 && v4i.y == 2 && v4i.z == 3 && v4i.w == 4);
+
+			v3f = vec3f(v2i, 3);		Assert::IsTrue(v3f.x == 1.f && v3f.y == 2.f && v3f.z == 3.f);
+			v3f = vec3f(v3i);			Assert::IsTrue(v3f.x == 1.f && v3f.y == 2.f && v3f.z == 3.f);
+
+			v3i = vec3i(v2f, 3.f);		Assert::IsTrue(v3i.x == 1 && v3i.y == 2 && v4i.z == 3);
+			v3i = vec3i(v3f);			Assert::IsTrue(v3i.x == 1 && v3i.y == 2 && v4i.z == 3);
+
+			v2f = vec2f(v2i);			Assert::IsTrue(v2f.x == 1.f && v2f.y == 2.f);
+
+			v2i = vec2i(v2f);			Assert::IsTrue(v2i.x == 1 && v2i.y == 2);
+		}
 
 		TEST_METHOD(TestEqual_IsTrue)
 		{

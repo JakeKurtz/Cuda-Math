@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CudaCompile Include="Matrix.h">
+      <Filter>Temp</Filter>
+    </CudaCompile>
+    <CudaCompile Include="Sample.cu">
+      <Filter>Temp</Filter>
+    </CudaCompile>
+    <CudaCompile Include="random.cu">
+      <Filter>final</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="spectral.h" />
+    <ClInclude Include="mat2x2.h">
+      <Filter>matrix types</Filter>
+    </ClInclude>
+    <ClInclude Include="mat3x3.h">
+      <Filter>matrix types</Filter>
+    </ClInclude>
+    <ClInclude Include="mat4x4.h">
+      <Filter>matrix types</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix2.h">
+      <Filter>Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="Sample.h">
+      <Filter>Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="mat.h">
+      <Filter>final\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="numeric.h">
+      <Filter>final\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cmplx.h">
+      <Filter>final\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cuda_common.h">
+      <Filter>final\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_common.h">
+      <Filter>final\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="random.h">
+      <Filter>final\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="vec.h">
+      <Filter>final\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="quat.h">
+      <Filter>final\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ASA.hpp">
+      <Filter>final\headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mat2x2.inl">
+      <Filter>matrix types</Filter>
+    </None>
+    <None Include="mat3x3.inl">
+      <Filter>matrix types</Filter>
+    </None>
+    <None Include="mat4x4.inl">
+      <Filter>matrix types</Filter>
+    </None>
+    <None Include="cmplx.inl">
+      <Filter>final</Filter>
+    </None>
+    <None Include="mat.inl">
+      <Filter>final</Filter>
+    </None>
+    <None Include="vec.inl">
+      <Filter>final</Filter>
+    </None>
+    <None Include="quat.inl">
+      <Filter>final</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Temp">
+      <UniqueIdentifier>{30b80080-6bc9-4f48-b239-4d30d296f585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="matrix types">
+      <UniqueIdentifier>{029e3296-20ad-4155-824a-4ff8eae9a131}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="final">
+      <UniqueIdentifier>{73e464d6-6b1b-45cd-9ae7-fe71233d9839}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="final\headers">
+      <UniqueIdentifier>{64c97aa5-66ec-4359-ae5e-7f464a264ef3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cuda_common.cpp">
+      <Filter>final</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

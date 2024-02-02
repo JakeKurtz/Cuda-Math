@@ -99,19 +99,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ASA.hpp" />
-    <ClInclude Include="Complex.h" />
-    <ClInclude Include="CudaCommon.h" />
-    <ClInclude Include="GLCommon.h" />
-    <ClInclude Include="Numeric.h" />
+    <ClInclude Include="cmplx.h" />
+    <ClInclude Include="cuda_common.h" />
+    <ClInclude Include="gl_common.h" />
+    <ClInclude Include="mat.h" />
+    <ClInclude Include="mat2x2.h" />
+    <ClInclude Include="mat3x3.h" />
+    <ClInclude Include="mat4x4.h" />
+    <ClInclude Include="numeric.h" />
     <ClInclude Include="Matrix2.h" />
-    <ClInclude Include="Quaternion.h" />
-    <ClInclude Include="Random.h" />
+    <ClInclude Include="quat.h" />
+    <ClInclude Include="random.h" />
     <ClInclude Include="Sample.h" />
+    <ClInclude Include="spectral.h" />
     <ClInclude Include="vec.h" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="Matrix.h" />
-    <CudaCompile Include="Random.cu">
+    <CudaCompile Include="random.cu">
       <FileType>Document</FileType>
     </CudaCompile>
   </ItemGroup>
@@ -121,9 +126,15 @@
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CudaCommon.cpp" />
+    <ClCompile Include="cuda_common.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cmplx.inl" />
+    <None Include="mat.inl" />
+    <None Include="mat2x2.inl" />
+    <None Include="mat3x3.inl" />
+    <None Include="mat4x4.inl" />
+    <None Include="quat.inl" />
     <None Include="vec.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

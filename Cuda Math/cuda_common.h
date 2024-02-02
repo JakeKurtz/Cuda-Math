@@ -5,7 +5,7 @@
 
 #define CML_ALIGNED_GENTYPES CML_ENABLE
 
-#if CML_ALIGNED_GENTYPES == CML_DISABLE
+#if CML_ALIGNED_GENTYPES == CML_ENABLE
 	#define CML_ALIGN(n) alignas(n)
 #else
 	#define CML_ALIGN(n) alignas(0)
@@ -48,8 +48,8 @@ extern void check_cuda(cudaError_t result, char const* const func, const char* c
 
 #define CML_CONSTANT __constant__ const
 
-#define CLM_FUNC_DECL  __host__ __device__ 
-#define CLM_CONSTEXPR constexpr
+#define CML_FUNC_DECL  __host__ __device__ 
+#define CML_CONSTEXPR constexpr
 
 #elif defined(__GNUC__) // GCC
 #define CML_ALIGN(n) __attribute__((aligned(n)))
@@ -58,8 +58,8 @@ extern void check_cuda(cudaError_t result, char const* const func, const char* c
 #elif defined(_MSC_VER) // MSVC
 #define CML_CONSTANT const
 
-#define CLM_FUNC_DECL
-#define CLM_CONSTEXPR constexpr
+#define CML_FUNC_DECL
+#define CML_CONSTEXPR constexpr
 
 #else
 #error ""

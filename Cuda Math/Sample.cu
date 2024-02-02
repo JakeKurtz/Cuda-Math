@@ -1,5 +1,6 @@
-#include "Sample.h"
-#include "Numeric.h"
+#include "sample.h"
+#include "numeric.h"
+#include "random.h"
 
 namespace cml
 {

@@ -1,7 +1,7 @@
 #ifndef _CML_MATH_
 #define _CML_MATH_
 
-#include "CudaCommon.h"
+#include "cuda_common.h"
 
 namespace cml
 {
@@ -38,31 +38,31 @@ namespace cml
     }
 
     template<NUMERIC_TYPE(T)> 
-    CLM_FUNC_DECL CLM_CONSTEXPR T remap(const T h1, const T l1, const T h2, const T l2, const T v)
+    CML_FUNC_DECL CML_CONSTEXPR T remap(const T h1, const T l1, const T h2, const T l2, const T v)
     {
         return l2 + (v - l1) * (h2 - l2) / (h1 - l1);
     }
 
     template<NUMERIC_TYPE(T)> 
-    CLM_FUNC_DECL CLM_CONSTEXPR T frac(const T v)
+    CML_FUNC_DECL CML_CONSTEXPR T frac(const T v)
     {
         return v - ::floor(v);
     }
 
     template<NUMERIC_TYPE(T)> 
-    CLM_FUNC_DECL CLM_CONSTEXPR T clamp(const T f, const T a, const T b)
+    CML_FUNC_DECL CML_CONSTEXPR T clamp(const T f, const T a, const T b)
     {
         return max(a, min(f, b));
     }
 
     template <NUMERIC_TYPE(T)> 
-    CLM_FUNC_DECL CLM_CONSTEXPR T mix(const T a, const T b, const T t)
+    CML_FUNC_DECL CML_CONSTEXPR T mix(const T a, const T b, const T t)
     {
         return a * (static_cast<T>(1) - t) + b * t;
     }
 
     template<NUMERIC_TYPE(T)> 
-    CLM_FUNC_DECL CLM_CONSTEXPR T smooth_step(const T a, const T b, const T x)
+    CML_FUNC_DECL CML_CONSTEXPR T smooth_step(const T a, const T b, const T x)
     {
         T y = clamp((x - a) / (b - a), 0, 1);
         return (y * y * (static_cast<T>(3) - (static_cast<T>(2) * y)));
