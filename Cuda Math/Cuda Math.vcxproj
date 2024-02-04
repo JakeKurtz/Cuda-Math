@@ -107,21 +107,19 @@
     <ClInclude Include="mat3x3.h" />
     <ClInclude Include="mat4x4.h" />
     <ClInclude Include="numeric.h" />
-    <ClInclude Include="Matrix2.h" />
     <ClInclude Include="quat.h" />
     <ClInclude Include="random.h" />
-    <ClInclude Include="Sample.h" />
+    <ClInclude Include="sample.h" />
     <ClInclude Include="spectral.h" />
     <ClInclude Include="vec.h" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="Matrix.h" />
     <CudaCompile Include="random.cu">
       <FileType>Document</FileType>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="Sample.cu">
+    <CudaCompile Include="sample.cu">
       <FileType>Document</FileType>
     </CudaCompile>
   </ItemGroup>
@@ -135,6 +133,7 @@
     <None Include="mat3x3.inl" />
     <None Include="mat4x4.inl" />
     <None Include="quat.inl" />
+    <None Include="spectral.inl" />
     <None Include="vec.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -198,6 +198,11 @@ namespace cml
 		{
 			printf("(%f, %f, %f, %f)\n", (float)x, (float)y, (float)z, (float)w);
 		};
+
+		CML_FUNC_DECL CML_CONSTEXPR bool isnan() const
+		{
+			// TODO
+		};
 	};
 
 	template <ASX::ID t_id, typename T>
@@ -325,6 +330,11 @@ namespace cml
 		{
 			printf("(%f, %f, %f)\n", (float)x, (float)y, (float)z);
 		};
+
+		CML_FUNC_DECL CML_CONSTEXPR bool isnan() const
+		{
+			// TODO
+		};
 	};
 
 	template <ASX::ID t_id, typename T>
@@ -443,6 +453,11 @@ namespace cml
 		CML_FUNC_DECL CML_CONSTEXPR void print() const
 		{
 			printf("(%f, %f)\n", (float)x, (float)y);
+		};
+
+		CML_FUNC_DECL CML_CONSTEXPR bool isnan() const
+		{
+			// TODO
 		};
 	};
 

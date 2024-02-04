@@ -128,6 +128,11 @@ namespace cml
 			printf("%f + %fi + %fj + %fk\n", (float)a, (float)i, (float)j, (float)k);
 		};
 
+		CML_FUNC_DECL CML_CONSTEXPR bool isnan() const
+		{
+			// TODO
+		};
+
 	};
 
 	/* -------------------------------------------------------------------------- */

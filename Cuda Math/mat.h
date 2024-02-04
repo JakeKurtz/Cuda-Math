@@ -193,6 +193,11 @@ namespace cml
             );
         };
 
+        CML_FUNC_DECL CML_CONSTEXPR bool isnan() const
+        {
+            // TODO
+        };
+
         static CML_FUNC_DECL CML_CONSTEXPR mat4x4_t<t_id, T> zero(void)
         {
             return mat4x4<T>(0);
@@ -322,6 +327,11 @@ namespace cml
             );
         };
 
+        CML_FUNC_DECL CML_CONSTEXPR bool isnan() const
+        {
+            // TODO
+        };
+
         static CML_FUNC_DECL CML_CONSTEXPR mat3x3_t<t_id, T> zero(void)
         {
             return mat3x3<T>(0);
@@ -423,6 +433,11 @@ namespace cml
                 static_cast<float>(t00), static_cast<float>(t01),
                 static_cast<float>(t10), static_cast<float>(t11)
             );
+        };
+
+        CML_FUNC_DECL CML_CONSTEXPR bool isnan() const
+        {
+            // TODO
         };
 
         static CML_FUNC_DECL CML_CONSTEXPR mat2x2_t<t_id, T> zero(void)

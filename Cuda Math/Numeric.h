@@ -93,5 +93,29 @@ namespace cml
         T y = clamp((x - a) / (b - a), 0, 1);
         return (y * y * (static_cast<T>(3) - (static_cast<T>(2) * y)));
     }
+
+    template<NUMERIC_TYPE(T)>
+    CML_FUNC_DECL CML_CONSTEXPR T pow2(const T x)
+    {
+        return x * x;
+    }
+
+    template<NUMERIC_TYPE(T)>
+    CML_FUNC_DECL CML_CONSTEXPR T gauss(const T x, const T a, const T b, const T c)
+    {
+        return a * exp(-pow2((x - b) / c));
+    }
+
+    template<NUMERIC_TYPE(T)>
+    CML_FUNC_DECL CML_CONSTEXPR T sigmoidal(const T x, const T a, const T b, const T c, const T d)
+    {
+        return d + (a - d) / (1.0 + ::pow(x / c, b));
+    }
+
+    template<NUMERIC_TYPE(T)>
+    CML_FUNC_DECL CML_CONSTEXPR T sigmoidal(const T x, const T a, const T b, const T c)
+    {
+        return a / (1.0 + ::exp(-b * (x - c)));
+    }
 }
 #endif // _CML_MATH_

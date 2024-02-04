@@ -114,6 +114,11 @@ namespace cml
 		{
 			printf("%f + i%f\n", (float)r, (float)i);
 		};
+
+		CML_FUNC_DECL CML_CONSTEXPR bool isnan() const
+		{
+			// TODO
+		};
 	};
 
 	/* -------------------------------------------------------------------------- */
